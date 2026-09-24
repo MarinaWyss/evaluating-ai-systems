@@ -56,6 +56,19 @@ def test_v2_runs_tools_and_records_the_end_state():
     assert trace.final_answer == "Done."
 
 
+def test_agents_know_the_store_date():
+    from beefcake import agents
+    for prompt in [agents.V2_PROMPT, agents.DEVICE_SUPPORT_PROMPT, agents.ORDERS_BILLING_PROMPT]:
+        assert "Today is October 5, 2026." in prompt
+
+
+def test_scripted_runs_record_no_token_counts():
+    from beefcake import llm
+    llm.LAST_CALL["tokens"] = 999  # left over from an earlier real call
+    trace = answer_v2("hi", chat_fn=ScriptedModel([{"content": "Hello!"}]), st=store.Store())
+    assert [s["tokens"] for s in trace.spans if s["kind"] == "llm"] == [None]
+
+
 def test_max_turns_stops_a_runaway_agent():
     loop = [{"tool_calls": [("search_docs", {"query": "x"})]}] * 20
     trace = answer_v2("?", chat_fn=ScriptedModel(loop), st=store.Store())
@@ -128,6 +141,7 @@ def test_warranty_check_reads_each_product():
     assert not checks.warranty_matches_policy("The BeefCake Row comes with a 3-year warranty.")
     assert not checks.warranty_matches_policy("Your rower has a 1-year warranty.")
     assert checks.warranty_matches_policy("It's covered by our 2-year warranty.")
+    assert not checks.warranty_matches_policy("The chest strap has a 2 year warranty.")
 
 
 def test_trajectory_efficiency_never_rewards_a_skipped_step():
@@ -162,6 +176,26 @@ def test_ci_demo_shows_the_suite_threshold_gotcha():
     report = ci.run()
     assert report["suite gate"] == "PASS" and report["ship it"] is False
     assert ci.run(prompt_version="v1.0")["ship it"] is False  # the stored v1.0 file is traces_v1.csv
+
+
+def test_ci_live_mode_checks_fresh_tool_calls(monkeypatch):
+    # --live regenerates the traces, so good live answers can pass every gate
+    import importlib.util
+    from types import SimpleNamespace
+
+    from beefcake import agents, bot
+    spec = importlib.util.spec_from_file_location("ci", DATA_DIR.parent / "scripts" / "run_ci_evals.py")
+    ci = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ci)
+    monkeypatch.setattr(bot, "answer", lambda q, prompt_version=None: SimpleNamespace(ai_response="Happy to help!"))
+    monkeypatch.setattr(agents, "answer_v2", lambda q, trace_id=None: AgentTrace(trace_id, q, "v2", final_answer="Done."))
+    assert ci.run(live=True)["ship it"] is True
+
+
+def test_phoenix_check_reports_a_stopped_server():
+    from beefcake.phoenix_export import check_phoenix
+    with pytest.raises(ConnectionError, match="phoenix serve"):
+        check_phoenix("http://127.0.0.1:9/v1/traces")
 
 
 # --- Retrieval metrics ----------------------------------------------------------

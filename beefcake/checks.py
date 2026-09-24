@@ -19,7 +19,8 @@ def no_rag_leak(answer: str) -> bool:
     return "provided context" not in answer.lower()
 
 
-WARRANTY_YEARS = {"row": 2, "rower": 2, "bell": 2, "kettlebell": 2, "pulse": 1}
+WARRANTY_YEARS = {"row": 2, "rower": 2, "bell": 2, "kettlebell": 2,
+                  "pulse": 1, "chest strap": 1, "heart rate strap": 1, "heart-rate strap": 1}
 YEARS = {"1": 1, "one": 1, "2": 2, "two": 2}
 
 
@@ -27,7 +28,7 @@ def warranty_matches_policy(answer: str) -> bool:
     """Every 'N-year warranty' must match the policy for the product named closest before it in the same
     sentence (Row and Bell 2 years, Pulse 1). With no product named, 1 or 2 years passes. (Still crude.)"""
     text = answer.lower()
-    for mention in re.finditer(r"\b(\d+|one|two|three)-year warranty", text):
+    for mention in re.finditer(r"\b(\d+|one|two|three)[- ]year warranty", text):
         sentence = re.split(r"[.!?]\s", text[:mention.start()])[-1]
         products = re.findall(r"\b(" + "|".join(WARRANTY_YEARS) + r")\b", sentence)
         allowed = {WARRANTY_YEARS[products[-1]]} if products else {1, 2}

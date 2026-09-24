@@ -18,13 +18,12 @@ from beefcake.traces import DATA_DIR, load_traces
 # --- Retrieval behaves the way the slides describe -------------------------
 
 def test_disconnecting_pulls_the_pulse_chunk_first():
-    # M2.9: "it keeps disconnecting" retrieves the Pulse section, not the Row's Coach-app section
+    # M2.9: "it keeps disconnecting" names no device, and retrieval puts the Pulse section first
     top = retrieve("it keeps disconnecting")[0]
     assert top.id.startswith("pulse_manual#")
 
 
 def test_warranty_question_retrieves_the_warranty_policy():
-    # Blame game round 2: the right chunk is retrieved, so a wrong answer is a generation failure
     assert retrieve("how long is the warranty on the rower")[0].id == "policies#warranty"
 
 
@@ -145,5 +144,7 @@ def test_model_selection_follows_the_key(monkeypatch):
         llm.get_model()
     monkeypatch.setenv("ANTHROPIC_API_KEY", "x")
     assert llm.get_model().startswith("anthropic/")
+    # The default judge is a stronger model from the same provider, not the bot's own model
+    assert llm.get_model("judge").startswith("anthropic/") and llm.get_model("judge") != llm.get_model()
     monkeypatch.setenv("BEEFCAKE_MODEL", "gemini/some-model")
     assert llm.get_model() == "gemini/some-model" and llm.get_model("judge") == "gemini/some-model"

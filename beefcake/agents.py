@@ -31,22 +31,24 @@ COMPANY = (
     "the BeefCake Bell (an app-connected adjustable kettlebell), the BeefCake Pulse (a heart-rate "
     "chest strap), and the BeefCake Coach subscription app."
 )
+# The store's date is fixed, so return windows and warranties work out the same on any day you run this.
+TODAY_LINE = f"Today is {store.TODAY:%B} {store.TODAY.day}, {store.TODAY.year}."
 
 V2_PROMPT = (
-    f"You are a friendly customer support agent for BeefCake Fitness. {COMPANY} "
+    f"You are a friendly customer support agent for BeefCake Fitness. {COMPANY} {TODAY_LINE}"
     "Use search_docs to look up product help and policies before answering. Use the order, return, "
     "and warranty tools when the customer asks about an order or a device they own. If you can't "
     "resolve the problem, use create_ticket to hand it to a person."
 )
 
 DEVICE_SUPPORT_PROMPT = (
-    f"You are the Device Support agent for BeefCake Fitness. {COMPANY} "
+    f"You are the Device Support agent for BeefCake Fitness. {COMPANY} {TODAY_LINE}"
     "You help with setup and troubleshooting for the Row, the Bell, and the Pulse. Use search_docs "
     "before answering. If you can't resolve the problem, use create_ticket to hand it to a person."
 )
 
 ORDERS_BILLING_PROMPT = (
-    f"You are the Orders and Billing agent for BeefCake Fitness. {COMPANY} "
+    f"You are the Orders and Billing agent for BeefCake Fitness. {COMPANY} {TODAY_LINE}"
     "You help with orders, returns, warranties, and Coach subscription billing. Use search_docs to "
     "check policies, and the order, return, and warranty tools for anything about a specific order "
     "or device. If you can't resolve the problem, use create_ticket to hand it to a person."
@@ -150,6 +152,7 @@ def run_agent(trace: AgentTrace, agent_name: str, system_prompt: str, tool_names
     tools = openai_tools(tool_names)
     convo = [{"role": "system", "content": system_prompt}] + messages
     for _ in range(max_turns):
+        llm.LAST_CALL.clear()  # so a scripted turn doesn't pick up the token count of an earlier real call
         start = time.perf_counter()
         reply = chat_fn(convo, tools=tools, model=model)
         trace.add_span("llm", agent_name, "model call", None, reply["content"],

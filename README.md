@@ -35,15 +35,20 @@ jupyter notebook notebooks/
 
 ### No API key?
 
-Every exercise works without one. The traces you'll analyze are pre-generated, and cells that need a live
-model tell you so and skip themselves. A key only matters for chatting with the bot, generating your own
-traces, and the stretch goals.
+Most of the workshop works without one. The traces you'll analyze are pre-generated, and cells that need a live
+model tell you so and skip themselves. Two exercises are different:
+
+- **Exercise 0:** without a key, you see what the bot retrieves instead of its answer.
+- **Exercise 8:** running your own judge (steps 2 to 4) needs a key. Without one, you see a recorded run of our judge.
+
+A key also lets you generate your own traces and try the stretch goals.
 
 ### Choosing a model
 
 The bot uses [LiteLLM](https://docs.litellm.ai/), so any major provider works. It picks a default model for
-whichever key it finds. To choose one yourself, set `BEEFCAKE_MODEL` (and `BEEFCAKE_JUDGE_MODEL` for judges)
-in `.env` using LiteLLM's `provider/model` names, for example `openai/gpt-4o-mini`.
+whichever key it finds, and judges default to a stronger model from the same provider. To choose models yourself,
+set `BEEFCAKE_MODEL` (and `BEEFCAKE_JUDGE_MODEL` for judges) in `.env` using LiteLLM's `provider/model` names, for
+example `openai/gpt-4o-mini`. If you set only `BEEFCAKE_MODEL`, judges use it too.
 
 ## The notebooks
 
@@ -135,6 +140,8 @@ python scripts/phoenix_demo.py                    # or --live to run v3 on a few
   That script is gitignored like `answer_keys/`, because it contains the Exercise 4a labels.
   For Modules 4 to 6, the same goes for `scripts/build_agent_data.py`, which writes the Exercise 5, 6, 7, and
   10 answer keys.
+- **For the M6.7 screenshot,** run `python scripts/phoenix_demo.py` without `--live` and open trace M2. It's the
+  curated trace the notes describe; live runs take different paths.
 - **Record the judge runs once,** with a key: `python scripts/record_example_runs.py`, then commit
   `data/example_runs/`. The Module 5 notebook shows that run to anyone without a key, and the swap-test result
   on the M5.14 slide comes from it.

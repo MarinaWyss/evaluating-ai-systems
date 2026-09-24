@@ -1,7 +1,7 @@
 """A small regression eval suite you could run in CI on every change (Module 6).
 
     python scripts/run_ci_evals.py            # checks the stored traces (no API key needed)
-    python scripts/run_ci_evals.py --live     # regenerates v1 answers first (needs a key)
+    python scripts/run_ci_evals.py --live     # regenerates the v1 answers and v2 tool calls first (needs a key)
 
 It exits with code 1 if any gate fails, which is what makes a CI job go red.
 Mostly code checks, because judges cost money on every run.
@@ -47,7 +47,13 @@ def run(live: bool = False, prompt_version: str = "v1.1") -> dict:
         rows.append({"case": r["Trace ID"], "check": "no RAG leak", "passed": checks.no_rag_leak(r["AI Response"])})
         rows.append({"case": r["Trace ID"], "check": "warranty matches policy",
                      "passed": checks.warranty_matches_policy(r["AI Response"])})
-    for t in load_agent_traces("exercise7_tool_calls.jsonl"):
+    if live:  # the stored Exercise 7 traces fail on purpose, so check fresh ones
+        from beefcake.agents import answer_v2
+        expected = pd.read_csv(ROOT / "data" / "exercise7_expected.csv")
+        tool_traces = [answer_v2(q, trace_id=tid) for tid, q in zip(expected["Trace ID"], expected["User Query"])]
+    else:
+        tool_traces = load_agent_traces("exercise7_tool_calls.jsonl")
+    for t in tool_traces:
         rows.append({"case": t.trace_id, "check": "only approved tools", "passed": checks.only_approved_tools(t)})
         rows.append({"case": t.trace_id, "check": "no false success", "passed": checks.no_false_success(t)})
     results = pd.DataFrame(rows)
