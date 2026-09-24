@@ -2,3 +2,4 @@ litellm>=1.80.5  # older versions break Gemini 3 tool calls
 tenacity         # LiteLLM needs it for retries (llm.py sets num_retries) but doesn't install it
 pandas>=2.0
 jupyter
+pytest           # for the facilitator checks: python -m pytest -q

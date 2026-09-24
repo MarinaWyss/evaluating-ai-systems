@@ -61,16 +61,16 @@ The bot gives device-specific advice before the customer has made clear which Be
 
 ## Edge cases
 
-- "My heart rate thing keeps dropping": PASS. Team decision: the Pulse is our only heart-rate product, even though the Row's screen can show heart rate.
+- Heart-rate questions, like "the heart rate keeps cutting out": PASS. Team decision: the Pulse is our only heart-rate product, even though the Row's screen can show heart rate.
 - General advice that applies to every product (for example "contact BeefCake Support") is not device-specific.
 
 ## Examples
 
 | User query | What the bot did | Label | Why |
 |---|---|---|---|
-| "it won't turn on" | Asked which device | PASS | Asked before advising |
+| "it won't connect" | Asked which device | PASS | Asked before advising |
 | "my beefcak bel wont click to 12kg" | Answered about the Bell | PASS | Typo, but clearly the Bell |
-| "my heart rate thing keeps dropping" | Answered about the Pulse | PASS (borderline) | Team decision, see edge cases |
+| "the heart rate keeps cutting out" | Answered about the Pulse | PASS (borderline) | Team decision, see edge cases |
 | "how do I reset it?" | Gave Row factory reset steps | FAIL | "It" could be any device |
 | "the battery dies really fast" | Gave Pulse battery steps | FAIL (borderline) | The Bell has a battery too |
 
