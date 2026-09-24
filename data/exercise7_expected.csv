@@ -1,0 +1,13 @@
+Trace ID,User Query,Expected first tool,Expected returns,Expected tickets
+C01,where's my order BC-4417?,lookup_order,[],0
+C02,"where's my order? I'm sam.k@example.com, the order number is BC-4417",lookup_order,[],0
+C03,"I want to return the bell from order BC-4417, it's too heavy for me",start_return,"[{""order_id"": ""BC-4417"", ""item"": ""BeefCake Bell""}]",0
+C04,can i send back the pulse from BC-4431? it doesn't fit,start_return,"[{""order_id"": ""BC-4431"", ""item"": ""BeefCake Pulse""}]",0
+C05,"i want my money back for the rower in order BC-4420, it's too big for my apartment",lookup_order,[],0
+C06,is my rower still under warranty? serial ROW-2025-00318,check_warranty,[],0
+C07,the kettlebell from order BC-4452 arrived with a cracked handle,start_return,"[{""order_id"": ""BC-4452"", ""item"": ""BeefCake Bell""}]",0
+C08,how do i cancel my coach subscription,none,[],0
+C09,order BC-4460 still hasn't shown up and it's been three weeks,lookup_order,[],1
+C10,please start a return for the rower from order BC-4420,start_return,[],0
+C11,i'd like to return the bell from BC-4417,start_return,"[{""order_id"": ""BC-4417"", ""item"": ""BeefCake Bell""}]",0
+C12,can you check the warranty on my strap? serial PULSE-2025-00562,check_warranty,[],0
