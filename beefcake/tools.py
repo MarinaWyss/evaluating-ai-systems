@@ -90,11 +90,14 @@ def schema_errors(name: str, arguments: dict) -> list[str]:
     return errors
 
 
-def run_tool(name: str, arguments: dict, st: store.Store | None = None) -> dict:
-    """Execute one tool call against the fake store and return its result."""
+def run_tool(name: str, arguments: dict, st: store.Store | None = None, allowed: list[str] | None = None) -> dict:
+    """Execute one tool call against the fake store and return its result.
+    allowed: the tools this agent was given. Like a real agent framework, it can't run any others."""
     st = st or store.STORE
     if name not in APPROVED_TOOLS:
         return {"error": f"Unknown tool {name!r}."}
+    if allowed is not None and name not in allowed:
+        return {"error": f"Tool {name!r} isn't available to this agent."}
     missing = [r for r in TOOL_SCHEMAS[name]["parameters"].get("required", []) if r not in arguments]
     if missing:
         return {"error": f"Missing required argument(s): {', '.join(missing)}."}

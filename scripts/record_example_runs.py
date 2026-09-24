@@ -35,6 +35,8 @@ def main() -> None:
 
     traces = pd.read_csv(ROOT / "data" / "exercise8_labeled_traces.csv")
     run = judge_all(traces[traces["Split"].isin(["dev", "test"])], ASSUMES_DEVICE_JUDGE, model=model)
+    if (run["Judge"] == "ERROR").any():
+        raise SystemExit("Some judge calls failed, so nothing was saved. Rerun.")
     run["Judge model"] = model
     run.to_csv(OUT / "judge_assumes_device.csv", index=False)
     for split in ["dev", "test"]:
@@ -43,6 +45,8 @@ def main() -> None:
 
     pairs = pd.read_csv(ROOT / "data" / "exercise9_pairs.csv")
     swaps = swap_test(pairs, model=model)
+    if (swaps[["A first", "B first"]] == "?").to_numpy().any():
+        raise SystemExit("Some pairwise verdicts couldn't be read, so swap_test.csv wasn't saved. Rerun.")
     swaps["Judge model"] = model
     swaps.to_csv(OUT / "swap_test.csv", index=False)
     print(f"Swap test: {int((~swaps['Consistent']).sum())} of {len(swaps)} verdicts flipped")

@@ -31,6 +31,7 @@ PER_CHECK = {
     "only approved tools": 1.0,
     "no false success": 1.0,
 }
+STORED_TRACES = {"v1.0": "traces_v1.csv", "v1.1": "traces_v1.1.csv"}
 
 
 def run(live: bool = False, prompt_version: str = "v1.1") -> dict:
@@ -41,7 +42,7 @@ def run(live: bool = False, prompt_version: str = "v1.1") -> dict:
         answers = [answer(q, prompt_version=prompt_version).ai_response for q in questions["User Query"]]
         v1 = pd.DataFrame({"Trace ID": questions["Question ID"], "AI Response": answers})
     else:
-        v1 = load_traces(f"traces_{prompt_version}.csv")
+        v1 = load_traces(STORED_TRACES[prompt_version])
     for _, r in v1.iterrows():
         rows.append({"case": r["Trace ID"], "check": "no RAG leak", "passed": checks.no_rag_leak(r["AI Response"])})
         rows.append({"case": r["Trace ID"], "check": "warranty matches policy",
@@ -58,7 +59,7 @@ def run(live: bool = False, prompt_version: str = "v1.1") -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--live", action="store_true")
-    parser.add_argument("--prompt", default="v1.1")
+    parser.add_argument("--prompt", default="v1.1", choices=sorted(STORED_TRACES))
     args = parser.parse_args()
     report = run(args.live, args.prompt)
     print(json.dumps(report, indent=2))

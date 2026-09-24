@@ -93,16 +93,25 @@ ASSUMES_DEVICE_JUDGE = build_judge_prompt(
 )
 
 
-def _parse_verdict(text: str) -> dict:
-    match = re.search(r"\{.*\}", text, re.S)
-    if match:
+def _parse_json_object(text: str) -> dict | None:
+    """The first JSON object in a reply, ignoring any text before or after it."""
+    decoder = json.JSONDecoder()
+    for brace in re.finditer(r"\{", text):
         try:
-            data = json.loads(match.group(0))
-            judgment = str(data.get("judgment", "")).strip().upper()
-            if judgment in (PASS, FAIL):
-                return {"reasoning": data.get("reasoning", ""), "judgment": judgment}
+            obj, _ = decoder.raw_decode(text, brace.start())
         except json.JSONDecodeError:
-            pass
+            continue
+        if isinstance(obj, dict):
+            return obj
+    return None
+
+
+def _parse_verdict(text: str) -> dict:
+    data = _parse_json_object(text)
+    if data:
+        judgment = str(data.get("judgment", "")).strip().upper()
+        if judgment in (PASS, FAIL):
+            return {"reasoning": data.get("reasoning", ""), "judgment": judgment}
     labeled = re.search(r"(JUDG(E)?MENT|VERDICT)\W+(PASS|FAIL)\b", text.upper())
     if labeled:
         return {"reasoning": text.strip(), "judgment": labeled.group(3)}
@@ -131,6 +140,10 @@ def judge_all(df: pd.DataFrame, judge_prompt: str, model: str | None = None, max
 
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         results = list(pool.map(one, rows))
+    errors = sum(r["judgment"] == "ERROR" for r in results)
+    if errors:
+        print(f"Warning: {errors} of {len(results)} judge calls failed or gave no clear PASS/FAIL, and tpr_tnr counts "
+              "them as wrong. Check the Judge reasoning column. For rate limits, rerun with max_workers=2.")
     out = df.copy()
     out["Judge"] = [r["judgment"] for r in results]
     out["Judge reasoning"] = [r["reasoning"] for r in results]
@@ -145,13 +158,18 @@ def tpr_tnr(human: pd.Series, judge: pd.Series) -> dict:
     """PASS is the positive class (Wengrow's convention).
     TPR: of the traces humans passed, the share the judge passed.
     TNR: of the traces humans failed, the share the judge failed.
+    A verdict that isn't PASS or FAIL (a failed call) counts as wrong, and shows up as "judge errors".
     """
     human = human.astype(str).str.upper().reset_index(drop=True)
     judge = judge.astype(str).str.upper().reset_index(drop=True)
     p, n = human == PASS, human == FAIL
     tpr = float((judge[p] == PASS).mean()) if p.any() else float("nan")
     tnr = float((judge[n] == FAIL).mean()) if n.any() else float("nan")
-    return {"TPR": round(tpr, 3), "TNR": round(tnr, 3), "human PASS": int(p.sum()), "human FAIL": int(n.sum())}
+    rates = {"TPR": round(tpr, 3), "TNR": round(tnr, 3), "human PASS": int(p.sum()), "human FAIL": int(n.sum())}
+    errors = int((~judge.isin([PASS, FAIL]) & (p | n)).sum())
+    if errors:
+        rates["judge errors"] = errors
+    return rates
 
 
 def rogan_gladen(observed_pass_rate: float, tpr: float, tnr: float) -> float:
@@ -210,9 +228,16 @@ def pairwise_judge(question: str, reply_1: str, reply_2: str, model: str | None 
         {"role": "system", "content": PAIRWISE_PROMPT},
         {"role": "user", "content": f"CUSTOMER: {question}\n\nREPLY 1:\n{reply_1}\n\nREPLY 2:\n{reply_2}"},
     ]
-    text = llm.complete(messages, model=model or llm.get_model("judge"))
-    found = re.findall(r"[12]", text)
-    return found[0] if found else "?"
+    return _parse_pick(llm.complete(messages, model=model or llm.get_model("judge")))
+
+
+def _parse_pick(text: str) -> str:
+    """The reply the judge picked: "1", "2", or "?" if that's unclear. Judges often explain after the digit."""
+    lead = re.match(r"\W*([12])\b", text)
+    if lead:
+        return lead.group(1)
+    named = set(re.findall(r"\breply ([12])\b", text.lower()))
+    return named.pop() if len(named) == 1 else "?"
 
 
 def swap_test(pairs: pd.DataFrame, judge_fn=None, model: str | None = None) -> pd.DataFrame:
@@ -248,8 +273,10 @@ def groundedness(answer: str, context: str, model: str | None = None) -> dict:
         {"role": "user", "content": f"DOCUMENTS:\n{context}\n\nANSWER:\n{answer}"},
     ]
     text = llm.complete(messages, model=model or llm.get_model("judge"))
-    match = re.search(r"\{.*\}", text, re.S)
-    claims = json.loads(match.group(0)).get("claims", []) if match else []
+    data = _parse_json_object(text)
+    if data is None:
+        return {"claims": [], "score": None, "flagged": None, "error": f"Couldn't read the checker's reply: {text[:300]}"}
+    claims = [c for c in data.get("claims", []) if isinstance(c, dict)]
     supported = sum(bool(c.get("supported")) for c in claims)
     return {"claims": claims, "score": round(supported / len(claims), 2) if claims else None,
             "flagged": any(not c.get("supported") for c in claims)}

@@ -164,7 +164,7 @@ def run_agent(trace: AgentTrace, agent_name: str, system_prompt: str, tool_names
         for call in reply["tool_calls"]:
             args = parse_arguments(call["arguments"])
             start = time.perf_counter()
-            result = run_tool(call["name"], args, st)
+            result = run_tool(call["name"], args, st, allowed=tool_names)
             trace.add_span("tool", agent_name, call["name"], args, result, round(time.perf_counter() - start, 3))
             convo.append({"role": "tool", "tool_call_id": call["id"], "content": json.dumps(result)})
     trace.add_span("error", agent_name, "MaxTurnsExceeded", None, f"Stopped after {max_turns} turns")

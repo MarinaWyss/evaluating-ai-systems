@@ -11,7 +11,7 @@ import pytest
 from beefcake import checks, store
 from beefcake.agents import (AgentTrace, ScriptedModel, answer_v2, answer_v3, load_agent_traces, route,
                              scripted_router)
-from beefcake.judge import _parse_verdict, corrected_pass_rate, rogan_gladen, swap_test, tpr_tnr
+from beefcake.judge import _parse_pick, _parse_verdict, corrected_pass_rate, rogan_gladen, swap_test, tpr_tnr
 from beefcake.retrieval import BM25Retriever, load_chunks
 from beefcake.retrieval_metrics import hit_rate, ndcg, precision, recall, reciprocal_rank
 from beefcake.tools import run_tool, schema_errors
@@ -70,6 +70,15 @@ def test_v3_records_router_and_handoff():
     assert checks.routed_correctly(trace, "orders_billing")
 
 
+def test_specialist_cannot_run_tools_it_was_not_given():
+    trace = answer_v3("return my bell", chat_fn=ScriptedModel([
+        {"tool_calls": [("start_return", {"order_id": "BC-4417", "item": "BeefCake Bell", "reason": "heavy"})]},
+        {"content": "Done."},
+    ]), complete_fn=scripted_router("device_support"), st=store.Store())
+    assert "error" in trace.tool_calls[0]["output"]
+    assert trace.end_state["returns"] == []
+
+
 def test_router_parses_replies():
     assert route("x", complete_fn=lambda m, model=None: "orders_billing") == "orders_billing"
     assert route("x", complete_fn=lambda m, model=None: " Device_Support\n") == "device_support"
@@ -113,6 +122,21 @@ def test_false_success_regex():
     assert t("I've started your return (R-001).", returns=[{"order_id": "BC-4417", "item": "BeefCake Bell"}])
 
 
+def test_warranty_check_reads_each_product():
+    assert checks.warranty_matches_policy(
+        "The Row and the Bell have a 2-year warranty, and the Pulse has a 1-year warranty.")
+    assert not checks.warranty_matches_policy("The BeefCake Row comes with a 3-year warranty.")
+    assert not checks.warranty_matches_policy("Your rower has a 1-year warranty.")
+    assert checks.warranty_matches_policy("It's covered by our 2-year warranty.")
+
+
+def test_trajectory_efficiency_never_rewards_a_skipped_step():
+    one_call = AgentTrace("x", "q", "v2", spans=[{"kind": "tool", "name": "lookup_order"}])
+    assert checks.trajectory_efficiency(one_call, 2) is None
+    assert checks.trajectory_efficiency(one_call, 1) == 1.0
+    assert checks.trajectory_efficiency(AgentTrace("x", "q", "v2"), 0) == 1.0
+
+
 def test_exercise10_trace_matches_the_script():
     m1 = load_agent_traces("v3_traces.jsonl")[0]
     assert m1.user_query == "coach charged me twice after I returned the rower"
@@ -137,6 +161,7 @@ def test_ci_demo_shows_the_suite_threshold_gotcha():
     spec.loader.exec_module(ci)
     report = ci.run()
     assert report["suite gate"] == "PASS" and report["ship it"] is False
+    assert ci.run(prompt_version="v1.0")["ship it"] is False  # the stored v1.0 file is traces_v1.csv
 
 
 # --- Retrieval metrics ----------------------------------------------------------
@@ -148,6 +173,13 @@ def test_retrieval_metrics():
     assert precision(ranked, {"a", "c"}, 3) == pytest.approx(2 / 3)
     assert recall(ranked, {"a", "z"}, 3) == 0.5
     assert ndcg(["a", "b"], {"a": 2, "b": 1}, 2) == 1.0
+
+
+def test_retrieval_metrics_count_each_section_once():
+    # Split chunks can put the same section in the ranking twice
+    assert ndcg(["s", "s", "x"], {"s": 1}, 3) == 1.0
+    assert precision(["s", "s", "x"], {"s"}, 3) == pytest.approx(1 / 3)
+    assert reciprocal_rank(["x", "x", "s"], {"s"}) == 0.5
 
 
 def test_smaller_chunks_keep_their_section():
@@ -175,6 +207,29 @@ def test_verdict_parsing():
     assert _parse_verdict('{"reasoning": "asked first", "judgment": "PASS"}')["judgment"] == "PASS"
     assert _parse_verdict("Reasoning... so the answer is FAIL")["judgment"] == "FAIL"
     assert _parse_verdict("no idea")["judgment"] == "ERROR"
+    assert _parse_verdict('{"reasoning": "ok", "judgment": "FAIL"}\nNote: {n/a}')["judgment"] == "FAIL"
+
+
+def test_judge_errors_are_reported():
+    rates = tpr_tnr(pd.Series(["PASS", "FAIL"]), pd.Series(["PASS", "ERROR"]))
+    assert rates["TNR"] == 0.0 and rates["judge errors"] == 1
+    assert "judge errors" not in tpr_tnr(pd.Series(["PASS"]), pd.Series(["PASS"]))
+
+
+def test_pairwise_pick_parsing():
+    assert _parse_pick("1\n\nReply 1 is better because it mentions the 2-hour charge.") == "1"
+    assert _parse_pick("**2**") == "2"
+    assert _parse_pick("Reply 2 is better: the 1-year warranty is right.") == "2"
+    assert _parse_pick("Both give the 2-hour charge time, but the second is kinder.") == "?"
+
+
+def test_groundedness_survives_messy_replies(monkeypatch):
+    from beefcake import judge, llm
+    monkeypatch.setattr(llm, "complete", lambda messages, model=None:
+                        '{"claims": [{"claim": "2-year warranty", "supported": true}]}\nNote: {see above}')
+    assert judge.groundedness("answer", "docs", model="x")["score"] == 1.0
+    monkeypatch.setattr(llm, "complete", lambda messages, model=None: "No JSON here.")
+    assert "error" in judge.groundedness("answer", "docs", model="x")
 
 
 def test_corrected_pass_rate_interval():
