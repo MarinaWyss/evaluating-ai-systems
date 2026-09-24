@@ -1,0 +1,181 @@
+Trace ID,Query Topic,User Query,History,AI Response,Retrieved Chunks,Prompt Version,Model,Source
+R01,device troubleshooting,screen froze in the middle of my workout!!,"SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake Row manual > The screen is frozen or not responding]
+Press and hold the power button on the side of the screen for 5 seconds to restart the screen. Your workout history is saved and won't be lost. If the screen freezes again during the same session, switch the Row off at the front base, wait 10 seconds, and switch it back on.
+
+[BeefCake Coach app help > Syncing workouts]
+Workouts from the Row, the Bell, and the Pulse sync to Coach over Bluetooth. Open the Coach app after your workout and keep your phone nearby until the sync finishes. If a workout is missing, pull down on the History screen to refresh. Check that the device shows as connected under Devices.
+
+[BeefCake Row manual > Care and maintenance]
+Wipe the rail and seat with a dry or slightly damp cloth after each workout. Don't use cleaning sprays on the screen. Once a month, check the pull strap for fraying. Don't oil the rail.
+
+Customer question: screen froze in the middle of my workout!!","That's frustrating, sorry! Press and hold the power button on the side of the Row's screen for 5 seconds to restart it. Your workout history is saved. If it happens again in the same session, switch the Row off at the front base, wait 10 seconds, and switch it back on.","[""row_manual#the-screen-is-frozen-or-not-responding"", ""coach_help#syncing-workouts"", ""row_manual#care-and-maintenance""]",v1.0,curated,curated
+R02,returns and warranty,whats your return policy,"SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake policies > Returns]
+You can return any BeefCake hardware (the Row, the Bell, or the Pulse) within 30 days of delivery, whether it's been opened and used or not. Include all parts and accessories. The customer pays return shipping, unless the item arrived damaged, in which case we send a prepaid return label (see Damaged deliveries below). We refund the original payment method within 10 business days of receiving the return. To start a return, contact BeefCake Support.
+
+[BeefCake policies > Damaged deliveries]
+If your order arrives damaged, contact BeefCake Support within 7 days of delivery with photos of the damage. We'll send a replacement or a prepaid return label. Damage reported after 7 days is handled as a warranty claim.
+
+[BeefCake Bell manual > About the Bell]
+The BeefCake Bell is an adjustable kettlebell from 4 kg to 32 kg in 2 kg steps. It sits in a base cradle, and you change the weight with the dial on top of the handle. The Bell connects to the BeefCake Coach app over Bluetooth to count reps and track weight.
+
+Customer question: whats your return policy","You can return any BeefCake hardware within 30 days of delivery, opened or not. The customer pays return shipping unless the item arrived damaged, in which case we send a prepaid label. Refunds go back to your original payment method within 10 business days of us receiving the return.","[""policies#returns"", ""policies#damaged-deliveries"", ""bell_manual#about-the-bell""]",v1.0,curated,curated
+R03,device troubleshooting,it won't turn on,"SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake Bell manual > The weight dial is stuck or won't click]
+If the dial won't turn or won't click at a weight, lift the Bell out of the cradle and set it back in so it sits flat. Check that the cradle is on a flat, hard floor and that nothing is caught between the plates. A solid amber light on the handle means the Bell isn't seated properly. Don't force the dial, and don't spray lubricant into the dial or the cradle. If the dial still won't click after reseating the Bell, contact BeefCake Support.
+
+[BeefCake Row manual > The Row won't turn on]
+Check that the power adapter is firmly connected at both ends and that the outlet works by plugging in something else. Look at the small light on the power adapter. A green light means the adapter is getting power. No light means the adapter or outlet is the problem. Make sure the power switch on the front base is set to on. If the adapter light is green, the switch is on, and the screen still stays dark, contact BeefCake Support.
+
+[BeefCake Row manual > The screen is frozen or not responding]
+Press and hold the power button on the side of the screen for 5 seconds to restart the screen. Your workout history is saved and won't be lost. If the screen freezes again during the same session, switch the Row off at the front base, wait 10 seconds, and switch it back on.
+
+Customer question: it won't turn on","Sorry to hear that! Which BeefCake product is it: the Row, the Bell, or the Pulse? Then I can walk you through the right steps.","[""bell_manual#the-weight-dial-is-stuck-or-won-t-click"", ""row_manual#the-row-won-t-turn-on"", ""row_manual#the-screen-is-frozen-or-not-responding""]",v1.0,curated,curated
+R04,subscription and billing,"i forgot to cancel the coach trial and got charged, can i get a refund??","SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake Coach app help > Free trial and subscription]
+New members get a 14-day free trial. Your subscription starts automatically when the trial ends, and you're billed monthly on the same date each month. To avoid being charged, cancel before the trial ends.
+
+[BeefCake policies > Coach subscription]
+BeefCake Coach includes a 14-day free trial. You can cancel any time. When you cancel, you keep access until the end of the current billing period. We don't give refunds for partial months.
+
+[BeefCake Coach app help > Cancelling your subscription]
+Go to Profile > Subscription > Cancel subscription. You keep access until the end of the billing period you've already paid for. We don't refund partial months.
+
+Customer question: i forgot to cancel the coach trial and got charged, can i get a refund??","I'm sorry about the surprise charge. Our policy is that we don't refund partial months, but you can cancel now under Profile > Subscription > Cancel subscription and keep access until the end of this billing period. If you'd like, contact BeefCake Support and they can look at your account.","[""coach_help#free-trial-and-subscription"", ""policies#coach-subscription"", ""coach_help#cancelling-your-subscription""]",v1.0,curated,curated
+R05,returns and warranty,how long does shipping take,"SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake policies > Returns]
+You can return any BeefCake hardware (the Row, the Bell, or the Pulse) within 30 days of delivery, whether it's been opened and used or not. Include all parts and accessories. The customer pays return shipping, unless the item arrived damaged, in which case we send a prepaid return label (see Damaged deliveries below). We refund the original payment method within 10 business days of receiving the return. To start a return, contact BeefCake Support.
+
+[BeefCake Bell manual > About the Bell]
+The BeefCake Bell is an adjustable kettlebell from 4 kg to 32 kg in 2 kg steps. It sits in a base cradle, and you change the weight with the dial on top of the handle. The Bell connects to the BeefCake Coach app over Bluetooth to count reps and track weight.
+
+[BeefCake Bell manual > Changing the weight]
+Set the Bell fully in its base cradle on a flat floor. The dial only turns when the Bell is seated in the cradle. Turn the dial until it clicks at the weight you want, then lift the Bell straight up. The plates you're not using stay in the cradle.
+
+Customer question: how long does shipping take","Standard shipping for BeefCake orders takes 5 to 7 business days, and you'll get a tracking link by email once your order ships.","[""policies#returns"", ""bell_manual#about-the-bell"", ""bell_manual#changing-the-weight""]",v1.0,curated,curated
+R06,device troubleshooting,there's a clicking noise when I row,"SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake Coach app help > Seeing two charges]
+If you see two charges from BeefCake Coach, one of them may be a temporary authorization hold from your bank, which usually disappears within 3 to 5 business days. If both charges are still there after 5 business days, contact BeefCake Support with the dates and amounts of both charges so we can look into it.
+
+[BeefCake Row manual > Connecting the Row to the Coach app]
+The Row connects to the BeefCake Coach app over Bluetooth. On the Row, go to Settings > Connections > Coach app and select Pair. In the Coach app, go to Devices > Add device > Row. If the Row loses its connection to the Coach app during a workout, keep your phone within 3 meters of the Row, turn Bluetooth off and on again on your phone, and restart the Coach app. If the connection still drops, remove the Row in the Coach app under Devices and pair it again.
+
+[BeefCake Row manual > Showing your heart rate on the Row]
+The Row screen can show your heart rate from a BeefCake Pulse strap. Put on the strap, then go to Settings > Connections > Heart rate on the Row and select your Pulse.
+
+Customer question: there's a clicking noise when I row","A clicking noise usually comes from the pull strap starting to fray. Check the strap for wear, and remember not to oil the rail. If the noise continues, contact BeefCake Support.","[""coach_help#seeing-two-charges"", ""row_manual#connecting-the-row-to-the-coach-app"", ""row_manual#showing-your-heart-rate-on-the-row""]",v1.0,curated,curated
+R07,device troubleshooting,my heart rate thing keeps dropping,"SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake Pulse manual > Signal drops or keeps disconnecting]
+If your heart rate drops out or the Pulse keeps disconnecting, wet the electrode pads again and tighten the strap. Keep the device it's paired with within 2 meters. The Pulse connects to one device at a time, so disconnect it from the Row before using it with your phone. A weak battery also causes the signal to drop, so replace the battery if the problem continues.
+
+[BeefCake Row manual > Showing your heart rate on the Row]
+The Row screen can show your heart rate from a BeefCake Pulse strap. Put on the strap, then go to Settings > Connections > Heart rate on the Row and select your Pulse.
+
+[BeefCake Pulse manual > Pairing the Pulse with the Row]
+Put on the strap so it wakes up. On the Row screen, go to Settings > Connections > Heart rate and select your Pulse from the list.
+
+Customer question: my heart rate thing keeps dropping","If your BeefCake Pulse keeps dropping your heart rate, wet the electrode pads again and tighten the strap. Keep the device it's paired with within 2 meters, and replace the battery if it keeps happening.","[""pulse_manual#signal-drops-or-keeps-disconnecting"", ""row_manual#showing-your-heart-rate-on-the-row"", ""pulse_manual#pairing-the-pulse-with-the-row""]",v1.0,curated,curated
+R08,device troubleshooting,how do i charge it,"SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake Bell manual > Firmware update failed]
+Charge the Bell to at least 50 percent, keep your phone within 1 meter, and try the update again from Devices > Bell > Update in the Coach app. If it fails twice, force close the Coach app, open it again, and retry.
+
+[BeefCake Bell manual > Battery and charging]
+The Bell has a rechargeable battery that charges over USB-C through the port under the handle. A full charge takes about 2 hours and lasts about 30 workouts. The battery drains faster if the Bell stays connected to the app when you're not using it. Put the Bell back in its cradle after a workout and it will go to sleep after 5 minutes.
+
+[BeefCake Bell manual > About the Bell]
+The BeefCake Bell is an adjustable kettlebell from 4 kg to 32 kg in 2 kg steps. It sits in a base cradle, and you change the weight with the dial on top of the handle. The Bell connects to the BeefCake Coach app over Bluetooth to count reps and track weight.
+
+Customer question: how do i charge it",The BeefCake Bell charges over USB-C through the port under the handle. A full charge takes about 2 hours and lasts about 30 workouts.,"[""bell_manual#firmware-update-failed"", ""bell_manual#battery-and-charging"", ""bell_manual#about-the-bell""]",v1.0,curated,curated
+R09,pairing,strap wont connect to my rower,"SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake Pulse manual > Wearing the Pulse]
+The BeefCake Pulse is a chest strap heart-rate monitor. Wet the two electrode pads on the back of the strap with water, then wear the strap just below your chest muscles with the BeefCake logo facing out. Tighten it so it stays in place without being uncomfortable.
+
+[BeefCake Pulse manual > Care]
+Rinse the strap in clean water after each workout and let it air dry. Unclip the sensor before washing the strap. Don't put the sensor in the washing machine.
+
+[BeefCake Row manual > Showing your heart rate on the Row]
+The Row screen can show your heart rate from a BeefCake Pulse strap. Put on the strap, then go to Settings > Connections > Heart rate on the Row and select your Pulse.
+
+Customer question: strap wont connect to my rower","Based on the provided context, first make sure the strap is worn correctly: wet the two electrode pads, wear it just below your chest muscles with the logo facing out, and tighten it. Then, on the Row screen, go to Settings > Connections > Heart rate and select your Pulse.","[""pulse_manual#wearing-the-pulse"", ""pulse_manual#care"", ""row_manual#showing-your-heart-rate-on-the-row""]",v1.0,curated,curated
+R10,out of scope,can you recommend a good protein powder,"SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake Bell manual > About the Bell]
+The BeefCake Bell is an adjustable kettlebell from 4 kg to 32 kg in 2 kg steps. It sits in a base cradle, and you change the weight with the dial on top of the handle. The Bell connects to the BeefCake Coach app over Bluetooth to count reps and track weight.
+
+[BeefCake Bell manual > Changing the weight]
+Set the Bell fully in its base cradle on a flat floor. The dial only turns when the Bell is seated in the cradle. Turn the dial until it clicks at the weight you want, then lift the Bell straight up. The plates you're not using stay in the cradle.
+
+[BeefCake Bell manual > The weight dial is stuck or won't click]
+If the dial won't turn or won't click at a weight, lift the Bell out of the cradle and set it back in so it sits flat. Check that the cradle is on a flat, hard floor and that nothing is caught between the plates. A solid amber light on the handle means the Bell isn't seated properly. Don't force the dial, and don't spray lubricant into the dial or the cradle. If the dial still won't click after reseating the Bell, contact BeefCake Support.
+
+Customer question: can you recommend a good protein powder","Sure! Whey protein is a popular choice for building muscle, and plant-based blends of pea and rice protein work well if you avoid dairy. Look for one with at least 20 grams of protein per serving.","[""bell_manual#about-the-bell"", ""bell_manual#changing-the-weight"", ""bell_manual#the-weight-dial-is-stuck-or-won-t-click""]",v1.0,curated,curated
+R11,device troubleshooting,"Hello, my rowing machine it is not showing the resistance correct, all the levels feel same","SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake Row manual > Specifications]
+Maximum user weight: 150 kg. Screen: 16 inch touchscreen. Resistance: 20 levels. Folded footprint: 60 by 90 cm.
+
+[BeefCake Row manual > Resistance feels wrong]
+Resistance is set with the dial on the right side of the rail, from level 1 to level 20. If every level feels the same, or the resistance doesn't match the level on the screen, calibrate it. Go to Settings > Resistance > Calibrate, then row 10 easy strokes when the screen asks you to. Calibration takes about a minute. If the resistance still feels wrong after calibrating, contact BeefCake Support.
+
+[BeefCake Row manual > The screen is frozen or not responding]
+Press and hold the power button on the side of the screen for 5 seconds to restart the screen. Your workout history is saved and won't be lost. If the screen freezes again during the same session, switch the Row off at the front base, wait 10 seconds, and switch it back on.
+
+Customer question: Hello, my rowing machine it is not showing the resistance correct, all the levels feel same","Thanks for the details! When every level feels the same, the Row needs calibrating. Go to Settings > Resistance > Calibrate on the screen and row 10 easy strokes when it asks. If it still feels the same afterward, contact BeefCake Support.","[""row_manual#specifications"", ""row_manual#resistance-feels-wrong"", ""row_manual#the-screen-is-frozen-or-not-responding""]",v1.0,curated,curated
+R12,device troubleshooting,bel keeps flashing red,"SYSTEM:
+You are a friendly customer support assistant for BeefCake Fitness, a home-gym company that sells the BeefCake Row, the BeefCake Bell, the BeefCake Pulse, and the BeefCake Coach app. Answer the customer's question using the provided context.
+
+USER:
+Context:
+[BeefCake Bell manual > Lights on the handle]
+Flashing blue: ready to pair. Solid blue: connected to the Coach app. Flashing red: battery low. Solid amber: the Bell isn't seated in the cradle properly.
+
+[BeefCake Pulse manual > Signal drops or keeps disconnecting]
+If your heart rate drops out or the Pulse keeps disconnecting, wet the electrode pads again and tighten the strap. Keep the device it's paired with within 2 meters. The Pulse connects to one device at a time, so disconnect it from the Row before using it with your phone. A weak battery also causes the signal to drop, so replace the battery if the problem continues.
+
+[BeefCake Bell manual > About the Bell]
+The BeefCake Bell is an adjustable kettlebell from 4 kg to 32 kg in 2 kg steps. It sits in a base cradle, and you change the weight with the dial on top of the handle. The Bell connects to the BeefCake Coach app over Bluetooth to count reps and track weight.
+
+Customer question: bel keeps flashing red",A flashing red light on the BeefCake Bell means the battery is low. Charge it over USB-C through the port under the handle. A full charge takes about 2 hours.,"[""bell_manual#lights-on-the-handle"", ""pulse_manual#signal-drops-or-keeps-disconnecting"", ""bell_manual#about-the-bell""]",v1.0,curated,curated

@@ -1,0 +1,16 @@
+User Query,Expected,Example prediction
+help me set up the rower,beefcake_row,beefcake_row
+my beefcak bel wont click to 12kg,beefcake_bell,beefcake_bell
+it keeps disconnecting,unknown,beefcake_pulse
+my heart rate thing keeps dropping,beefcake_pulse,beefcake_pulse
+why did coach charge me twice,beefcake_coach,beefcake_coach
+how do i cancel my subscription,beefcake_coach,beefcake_coach
+the screen is frozen,beefcake_row,beefcake_row
+kettlebell dial is stuck,beefcake_bell,beefcake_bell
+how do I reset it?,unknown,beefcake_row
+can i return the rowing machine,beefcake_row,beefcake_row
+forgot my password,beefcake_coach,beefcake_coach
+the strap wont pair with my phone,beefcake_pulse,beefcake_pulse
+resistance is way too easy,beefcake_row,beefcake_row
+chest strap battery replacement,beefcake_pulse,beefcake_pulse
+what's the weather tomorrow,unknown,unknown
