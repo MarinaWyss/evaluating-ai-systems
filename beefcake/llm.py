@@ -88,6 +88,9 @@ def complete(messages: list[dict], model: str | None = None, temperature: float 
 
     import litellm  # imported here so the rest of the package works without it
 
+    # Newer models (GPT-6, Claude Sonnet 5 and Opus 5.5) reject temperature=0. drop_params tells
+    # LiteLLM to leave out any setting a model doesn't support instead of raising an error.
+    kwargs.setdefault("drop_params", True)
     start = time.perf_counter()
     response = litellm.completion(model=model, messages=messages, temperature=temperature, **kwargs)
     LAST_CALL.clear()
