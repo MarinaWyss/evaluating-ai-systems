@@ -19,13 +19,21 @@ def no_rag_leak(answer: str) -> bool:
     return "provided context" not in answer.lower()
 
 
+WARRANTY_YEARS = {"row": 2, "rower": 2, "bell": 2, "kettlebell": 2, "pulse": 1}
+YEARS = {"1": 1, "one": 1, "2": 2, "two": 2}
+
+
 def warranty_matches_policy(answer: str) -> bool:
-    """Every 'N-year warranty' must be 1 or 2 years, and the Row and Bell must never get 1. (Still crude.)"""
+    """Every 'N-year warranty' must match the policy for the product named closest before it in the same
+    sentence (Row and Bell 2 years, Pulse 1). With no product named, 1 or 2 years passes. (Still crude.)"""
     text = answer.lower()
-    years = re.findall(r"(\d+|one|two|three)-year warranty", text)
-    if any(y not in {"1", "2", "one", "two"} for y in years):
-        return False
-    return not re.search(r"(row|bell)\b[^.]*\b(1|one)-year warranty", text)
+    for mention in re.finditer(r"\b(\d+|one|two|three)-year warranty", text):
+        sentence = re.split(r"[.!?]\s", text[:mention.start()])[-1]
+        products = re.findall(r"\b(" + "|".join(WARRANTY_YEARS) + r")\b", sentence)
+        allowed = {WARRANTY_YEARS[products[-1]]} if products else {1, 2}
+        if YEARS.get(mention.group(1)) not in allowed:
+            return False
+    return True
 
 
 # --- Checks on tool calls (v2 and v3 traces) --------------------------------
@@ -75,11 +83,12 @@ def routed_correctly(trace: AgentTrace, expected_agent: str) -> bool:
 # --- Agent metrics (M6.2) ----------------------------------------------------
 
 def trajectory_efficiency(trace: AgentTrace, shortest_path: int) -> float:
-    """Shortest number of tool calls that would have worked, divided by the number the agent made."""
+    """Shortest number of tool calls that would have worked, divided by the number the agent made.
+    None if it made fewer than that: it skipped a step it needed, so it wasn't efficient, just wrong."""
     taken = len(trace.tool_calls)
-    if taken == 0:
-        return 1.0 if shortest_path == 0 else None  # it skipped a step it needed
-    return round(shortest_path / taken, 2)
+    if taken < shortest_path:
+        return None
+    return round(shortest_path / taken, 2) if taken else 1.0
 
 
 # --- CI gates (M6.11) --------------------------------------------------------
