@@ -24,7 +24,7 @@ REPO_URL = "{REPO_URL}"
 if "google.colab" in sys.modules:
     if not os.path.exists("/content/EvalsWorkshop"):
         !git clone -q {{REPO_URL}} /content/EvalsWorkshop
-        !pip install -q litellm
+        !pip install -q "litellm>=1.80.5" tenacity
     os.chdir("/content/EvalsWorkshop")
 elif os.path.basename(os.getcwd()) == "notebooks":
     os.chdir("..")
@@ -49,6 +49,8 @@ def code(text: str):
 
 def save(name: str, cells: list) -> None:
     nb = nbf.v4.new_notebook()
+    for i, cell in enumerate(cells):  # stable cell IDs, so rebuilding doesn't create a noisy diff
+        cell["id"] = f"{Path(name).stem[:40]}-{i:02d}"
     nb["cells"] = cells
     nb["metadata"] = {
         "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
@@ -484,8 +486,544 @@ checked.loc[checked["Check: warranty"] == "FAIL", ["Trace ID", "User Query", "In
     ])
 
 
+# ---------------------------------------------------------------------------
+# 04: component evals (Module 4, Exercises 5, 6, and 7)
+# ---------------------------------------------------------------------------
+
+def nb_m4():
+    questions = pd.read_csv(ROOT / "data" / "exercise6_questions.csv")["Question"].tolist()
+    relevant_blank = "relevant = {\n" + "".join(f'    "{q}": [],\n' for q in questions) + "}"
+    save("04_component_evals.ipynb", [
+        md("""
+# Module 4: Component-level evals
+
+1. **Exercise 5 (blame game):** three wrong answers. Which piece broke?
+2. Retrieval metrics, and **Exercise 6:** label relevant chunks and measure retrieval.
+3. Groundedness: does the answer stick to what was retrieved?
+4. **Exercise 7:** checks on logged tool calls.
+
+This afternoon the bot is **version 2**: an agent with tools. It can search the docs, look up orders, start
+returns, check warranties, and hand off to a person with `create_ticket`. There's deliberately no refund tool.
+"""),
+        code(SETUP),
+        md("""
+## 1. Exercise 5: Blame game (8 min)
+
+Three wrong answers, with full traces. For each one, decide which piece broke: **retrieval** (it fetched the
+wrong text), **prompt** (an instruction is missing), **generation** (it had the right text and still got it
+wrong), or **tool call** (a tool was called wrong). First table with all three right wins.
+"""),
+        code('''
+from beefcake.agents import load_agent_traces, show_agent_trace
+
+blame = load_agent_traces("exercise5_blame_game.jsonl")
+for t in blame:
+    show_agent_trace(t, full=True)
+    print()
+'''),
+        code('my_answers = {"B1": "", "B2": "", "B3": ""}  # retrieval, prompt, generation, or tool call'),
+        md("""
+## 2. Retrieval metrics
+
+| Metric | What it measures |
+|---|---|
+| Hit rate@k | Share of questions with a relevant chunk in the top k |
+| Recall@k | Share of all relevant chunks that made the top k |
+| Precision@k | Share of the top k that are relevant |
+| MRR | Average of 1 / rank of the first relevant chunk |
+
+### Exercise 6: Retrieval eval (12 min)
+
+1. For each golden question, look at the top 5 chunks and write down the **section IDs** that actually answer it.
+   Ask yourself: could the bot answer from this chunk alone? Mentioning the right product isn't enough.
+2. Compute hit rate@3 and MRR.
+3. Change one thing (`TOP_K`, or `MAX_WORDS` for the chunk size) and rerun.
+"""),
+        code('''
+from beefcake.retrieval import BM25Retriever, load_chunks
+
+golden = pd.read_csv("data/exercise6_questions.csv")["Question"].tolist()
+candidates = BM25Retriever()
+for q in golden:
+    print("QUESTION:", q)
+    for rank, chunk in enumerate(candidates.retrieve(q, k=5), 1):
+        print(f"  {rank}. {chunk.section_id}\\n     {chunk.text[:140]}...")
+    print()
+'''),
+        md("""
+Every golden question has at least one relevant section somewhere in the docs. If none of the top 5 answer it,
+find the right one in this list of all sections, so a miss counts as a miss.
+"""),
+        code('''
+for c in load_chunks():
+    print(f"{c.section_id:65} {c.text[:60]}...")
+'''),
+        code(relevant_blank),
+        code('''
+from beefcake.retrieval_metrics import hit_rate, precision, recall, reciprocal_rank
+
+TOP_K = 3          # try 5
+MAX_WORDS = None   # try 35 or 20 to split long sections into smaller chunks
+
+def retrieval_report(relevant, top_k=TOP_K, max_words=MAX_WORDS):
+    retriever = BM25Retriever(load_chunks(max_words=max_words))
+    rows = []
+    for q, rel in relevant.items():
+        ranked = []
+        for c in retriever.retrieve(q, k=20):
+            if c.section_id not in ranked:
+                ranked.append(c.section_id)
+        rows.append({"question": q, "retrieved": ranked[:top_k],
+                     "hit": hit_rate(ranked, set(rel), top_k),
+                     "RR": round(reciprocal_rank(ranked, set(rel), top_k), 2),
+                     "precision": round(precision(ranked, set(rel), top_k), 2),
+                     "recall": round(recall(ranked, set(rel), top_k), 2)})
+    table = pd.DataFrame(rows)
+    print(f"top_k={top_k}, max_words={max_words}:  hit rate {table['hit'].mean():.0%},  MRR {table['RR'].mean():.2f},"
+          f"  precision {table['precision'].mean():.2f},  recall {table['recall'].mean():.2f}")
+    return table
+
+missing = [q for q, r in relevant.items() if not r]
+if missing:
+    print(f"Label every question first ({len(missing)} still empty). Leaving one out would hide a miss.")
+else:
+    display(retrieval_report(relevant))
+'''),
+        md("""
+Did MRR and hit rate move together when you changed something? If you tried a larger `TOP_K`, what happened to
+precision, and to how long the prompt gets? Sections you never labeled count as not relevant, so if a new
+setting surfaces one, label it.
+"""),
+        md("""
+## 3. Groundedness
+
+Split the answer into claims and check each claim against the retrieved text. One unsupported claim is enough to
+flag the answer. Here's round 2 of the blame game, checked by an LLM. Like any judge, this checker needs
+validating against human labels before you rely on it.
+"""),
+        code('''
+from beefcake.judge import groundedness
+from beefcake.tools import run_tool
+
+b2 = blame[1]
+context = "\\n\\n".join(run_tool("search_docs", {"query": "rower warranty"})["results"])
+print("ANSWER:", b2.final_answer, "\\n")
+if llm.has_api_key():
+    display(groundedness(b2.final_answer, context))
+else:
+    print("Needs an API key. By hand: the '3-year warranty' claim isn't supported, because the policy says 2 years.")
+'''),
+        md("""
+## 4. Exercise 7: Tool-call eval (8 min)
+
+Here are logged tool calls from version 2, and what we expected for each. Finish the four checks, run them,
+and see which traces fail. Things you can use:
+
+- `first_action_tool(trace)` gives the first tool that isn't a doc search (or `"none"`)
+- `schema_errors(name, arguments)` lists problems with a call's arguments
+- `APPROVED_TOOLS` is the set of real tool names
+- `trace.tool_calls` is the list of tool-call spans (each has `name` and `input`), and `trace.end_state` is what
+  the store looks like afterwards
+"""),
+        code('''
+import json
+from beefcake.checks import first_action_tool
+from beefcake.tools import APPROVED_TOOLS, schema_errors
+
+tool_traces = {t.trace_id: t for t in load_agent_traces("exercise7_tool_calls.jsonl")}
+expected = pd.read_csv("data/exercise7_expected.csv").set_index("Trace ID")
+show_agent_trace(tool_traces["C04"])
+expected
+'''),
+        code('''
+def check_expected_tool(trace, exp):
+    # YOUR CODE HERE: True if the first action tool matches exp["Expected first tool"]
+    return True
+
+def check_schema(trace, exp):
+    # YOUR CODE HERE: True if every approved tool call has valid arguments
+    return True
+
+def check_no_made_up_tools(trace, exp):
+    # YOUR CODE HERE: True if every tool call is in APPROVED_TOOLS
+    return True
+
+def check_end_state(trace, exp):
+    # YOUR CODE HERE: compare trace.end_state with json.loads(exp["Expected returns"]) and exp["Expected tickets"]
+    return True
+
+CHECKS = {"expected tool": check_expected_tool, "schema": check_schema,
+          "no made-up tools": check_no_made_up_tools, "end state": check_end_state}
+
+def run_tool_checks(traces, checks_to_run):
+    return pd.DataFrame([
+        {"Trace ID": tid, **{name: "PASS" if fn(t, expected.loc[tid]) else "FAIL" for name, fn in checks_to_run.items()}}
+        for tid, t in traces.items()
+    ])
+
+run_tool_checks(tool_traces, CHECKS)
+'''),
+        md("""
+One of these traces takes a different path to the right end state. Did any of your checks fail it? Should it
+have failed? Also look for traces that pass every argument check and still leave the store in the wrong state.
+"""),
+        md("""
+### Stretch: run version 2 live
+
+With a key, run the same questions through the live agent and apply your checks. Your model will make
+different mistakes from the logged ones.
+"""),
+        code('''
+from beefcake.agents import answer_v2
+
+if llm.has_api_key():
+    live = {tid: answer_v2(expected.loc[tid, "User Query"], trace_id=tid) for tid in expected.index[:5]}
+    display(run_tool_checks(live, CHECKS))
+    show_agent_trace(live["C01"])
+else:
+    print("Needs an API key.")
+'''),
+        md("---\n## Solutions (try it yourself first)"),
+        code('''
+from beefcake import checks
+
+SOLUTION_CHECKS = {
+    "expected tool": lambda t, e: checks.first_action_tool(t) == e["Expected first tool"],
+    "schema": lambda t, e: checks.arguments_match_schema(t),
+    "no made-up tools": lambda t, e: checks.only_approved_tools(t),
+    "end state": lambda t, e: checks.end_state_matches(t, json.loads(e["Expected returns"]), int(e["Expected tickets"])),
+    "no false success": lambda t, e: checks.no_false_success(t),
+}
+run_tool_checks(tool_traces, SOLUTION_CHECKS)
+'''),
+    ])
+
+
+# ---------------------------------------------------------------------------
+# 05: LLM judges (Module 5, Exercises 8 and 9)
+# ---------------------------------------------------------------------------
+
+def nb_m5():
+    save("05_llm_judge.ipynb", [
+        md("""
+# Module 5: LLM-as-judge that you can trust
+
+1. Our judge for "Assumes device", built from the rubric.
+2. **Exercise 8 (25 min):** build your own judge, align it on the dev set, run it once on the test set.
+3. Correcting a pass rate for an imperfect judge.
+4. **Exercise 9 (demo):** the swap test for position bias.
+
+Judges need an API key. Without one, you'll see a recorded run if the facilitator has saved one.
+"""),
+        code(SETUP),
+        md("## 1. A real judge\n\nOverview, one failure mode, PASS and FAIL criteria, reasoning before the verdict, examples, then the trace."),
+        code('''
+from beefcake.judge import ASSUMES_DEVICE_JUDGE, build_judge_prompt, judge_all, run_judge, tpr_tnr
+print(ASSUMES_DEVICE_JUDGE)
+'''),
+        md("""
+## 2. Exercise 8: Judge alignment (25 min)
+
+1. Turn your Exercise 4a rubric into a judge with the six-part template (8 min).
+2. Run it on the **dev** set. Report TPR and TNR (5 min).
+3. Read the reasoning on every disagreement. Improve the prompt once. Rerun (8 min).
+4. **One** run on the **test** set. Post your numbers (4 min).
+
+The labeled traces are split about 10% train (for your few-shot examples), 40% dev, and 50% test. If your group
+wrote a rubric for a different failure mode, use these "Assumes device" labels for the exercise.
+"""),
+        code('''
+traces = pd.read_csv("data/exercise8_labeled_traces.csv")
+train, dev, test = (traces[traces["Split"] == s] for s in ["train", "dev", "test"])
+print(len(train), "train,", len(dev), "dev,", len(test), "test")
+display(traces.groupby("Split")["Assumes device"].value_counts().unstack())
+train[["User Query", "AI Response", "Assumes device", "Notes"]]
+'''),
+        code('''
+# Build your judge from your rubric. Examples come from the TRAIN split only.
+examples = [
+    {"user_query": r["User Query"], "ai_response": r["AI Response"], "judgment": r["Assumes device"], "reasoning": r["Notes"]}
+    for _, r in pd.concat([train[(train["Assumes device"] == "PASS") & ~train["Notes"].str.contains("different failure")].head(2),
+                           train[train["Assumes device"] == "FAIL"].head(2)]).iterrows()
+]  # pick your own: the most useful examples are the borderline ones
+
+my_judge = build_judge_prompt(
+    failure_mode="Assumes device",
+    definition="YOUR DEFINITION FROM THE RUBRIC",
+    pass_criteria="YOUR PASS CRITERIA",
+    fail_criteria="YOUR FAIL CRITERIA",
+    examples=examples,
+)
+print(my_judge)
+'''),
+        md("### Run it on the dev set"),
+        code('''
+from pathlib import Path
+
+RECORDED = Path("data/example_runs/judge_assumes_device.csv")
+
+if llm.has_api_key():
+    dev_run = judge_all(dev, my_judge)
+elif RECORDED.exists():
+    print("No API key: showing the recorded run of OUR judge, not yours.")
+    dev_run = pd.read_csv(RECORDED)
+    dev_run = dev_run[dev_run["Split"] == "dev"]
+else:
+    dev_run = None
+    print("Needs an API key (or a recorded run in data/example_runs/).")
+
+if dev_run is not None:
+    print(tpr_tnr(dev_run["Assumes device"], dev_run["Judge"]))
+'''),
+        md("### Read every disagreement\n\nIs the prompt ambiguous? Is an edge case missing? Or was the human label wrong?"),
+        code('''
+if dev_run is not None:
+    wrong = dev_run[dev_run["Judge"] != dev_run["Assumes device"]]
+    for _, r in wrong.iterrows():
+        print(f"{r['Trace ID']}  human={r['Assumes device']}  judge={r['Judge']}")
+        print(f"  USER:  {r['User Query']}\\n  BOT:   {r['AI Response']}\\n  JUDGE: {r['Judge reasoning']}\\n")
+'''),
+        md("""
+Improve the prompt once and rerun the dev cell. When you're happy, run the test set **once**. Your leaderboard
+score is the lower of TPR and TNR, so a judge that says PASS to everything can't win.
+"""),
+        code('''
+RUN_TEST = False  # set to True once, when you're done iterating on dev
+
+if RUN_TEST and llm.has_api_key():
+    test_run = judge_all(test, my_judge)
+    rates = tpr_tnr(test_run["Assumes device"], test_run["Judge"])
+    print(rates, "  leaderboard score:", min(rates["TPR"], rates["TNR"]))
+'''),
+        md("""
+## 3. Correcting for an imperfect judge
+
+If your judge has TPR 89% and TNR 87% and says 80% of production traces pass, the true pass rate is about 88%:
+`(observed + TNR - 1) / (TPR + TNR - 1)`. It only works if TPR + TNR is above 1.
+"""),
+        code('''
+from beefcake.judge import corrected_pass_rate, rogan_gladen
+
+print(f"Worked example: {rogan_gladen(0.80, 0.89, 0.87):.1%}")
+'''),
+        md("""
+With a labeled test set, you can also get an interval. The production verdicts below come from a synthetic
+production log (made up for this demo). Notice how wide the interval is with a small test set.
+"""),
+        code('''
+production = pd.read_csv("data/production_log_synthetic.csv", keep_default_na=False)
+judged = production.loc[production["Judge: Assumes device"] != "", "Judge: Assumes device"]
+if "test_run" in globals():
+    labeled_run = test_run                     # your judge's one test-set run
+elif RECORDED.exists():
+    labeled_run = pd.read_csv(RECORDED)
+    labeled_run = labeled_run[labeled_run["Split"] == "test"]   # the recorded run of our judge
+else:
+    labeled_run = None
+    print("Needs a judge run on the test set: yours (RUN_TEST above) or a recorded one.")
+if labeled_run is not None:
+    print(corrected_pass_rate(labeled_run["Assumes device"], labeled_run["Judge"], judged))
+'''),
+        md("""
+## 4. Exercise 9: The swap test (demo)
+
+A pairwise judge sees two replies and picks the better one. Run every pair in both orders: a consistent judge
+picks the same reply both times. In each pair here, one reply adds friendly filler, so you can also see whether
+the judge prefers longer answers.
+"""),
+        code('''
+from beefcake.judge import swap_test
+
+pairs = pd.read_csv("data/exercise9_pairs.csv")
+SWAPS = Path("data/example_runs/swap_test.csv")
+if llm.has_api_key():
+    swaps = swap_test(pairs)
+elif SWAPS.exists():
+    swaps = pd.read_csv(SWAPS)
+    print("Recorded run with", swaps["Judge model"].iloc[0])
+else:
+    swaps = None
+    print("Needs an API key (or a recorded run in data/example_runs/).")
+if swaps is not None:
+    print(f"{(~swaps['Consistent'].astype(bool)).sum()} of {len(swaps)} verdicts flipped when the order changed")
+    display(swaps)
+'''),
+    ])
+
+
+# ---------------------------------------------------------------------------
+# 06: agents in production (Module 6, Exercise 10)
+# ---------------------------------------------------------------------------
+
+def nb_m6():
+    save("06_agents_production.ipynb", [
+        md("""
+# Module 6: Multi-agent systems in production
+
+1. Version 3 of the bot: a router and two specialist agents.
+2. **Exercise 10 (15 min):** multi-agent autopsy.
+3. Agent metrics: task success and trajectory efficiency.
+4. A production log: latency, rates by topic, what to sample for review, escalations.
+5. Evals in CI: a suite threshold versus per-check gates.
+
+Exercise 11 (your production eval plan) is on paper.
+"""),
+        code(SETUP),
+        md("## 1. Version 3: a router, a handoff, and two agents"),
+        code('''
+from beefcake.agents import answer_v3, load_agent_traces, show_agent_trace
+
+v3 = {t.trace_id: t for t in load_agent_traces("v3_traces.jsonl")}
+if llm.has_api_key():
+    show_agent_trace(answer_v3("can I still return the bell from order BC-4417? it's too heavy for me"))
+else:
+    show_agent_trace(v3["M2"])
+'''),
+        md("""
+## 2. Exercise 10: Multi-agent autopsy (15 min)
+
+This trace has a wrong final answer.
+
+1. Read it span by span and write open codes.
+2. Which agent and which span went wrong first?
+3. Check your codes against MAST's categories: system design, inter-agent misalignment, task verification.
+4. Write the eval that would have caught it: a code check, a handoff assertion, or a judge.
+"""),
+        code('show_agent_trace(v3["M1"], full=True)'),
+        code('''
+my_autopsy = {
+    "open codes": [],
+    "agent and span that went wrong first": "",
+    "MAST category": "",
+    "eval that would catch it": "",
+}
+'''),
+        md("A handoff is recorded like a tool call (`transfer_to_...`), so you can assert on it. Write a routing check:"),
+        code('''
+from beefcake.checks import routed_correctly
+
+def expected_agent(query):
+    # YOUR CODE HERE: return "orders_billing" or "device_support"
+    return "device_support"
+
+for tid, t in v3.items():
+    print(tid, t.user_query, "->", "PASS" if routed_correctly(t, expected_agent(t.user_query)) else "FAIL")
+'''),
+        md("With a key, test the live router on a small golden set:"),
+        code('''
+from beefcake.agents import route
+
+router_golden = pd.read_csv("data/router_golden.csv")
+if llm.has_api_key():
+    router_golden["Routed to"] = [route(q) for q in router_golden["User Query"]]
+    router_golden["Result"] = ["PASS" if a == b else "FAIL"
+                               for a, b in zip(router_golden["Routed to"], router_golden["Expected agent"])]
+router_golden
+'''),
+        md("""
+## 3. Agent metrics
+
+Task success: did it reach the goal? Check the end state with code. Trajectory efficiency: the shortest path
+that would have worked, divided by the path the agent took.
+"""),
+        code('''
+import json
+from beefcake import checks
+
+tool_traces = load_agent_traces("exercise7_tool_calls.jsonl")
+expected = pd.read_csv("data/exercise7_expected.csv").set_index("Trace ID")
+SHORTEST = {"C09": 2}  # look up the order, then hand off. Everything else needs one call at most.
+
+rows = []
+for t in tool_traces:
+    e = expected.loc[t.trace_id]
+    rows.append({"Trace ID": t.trace_id, "User Query": t.user_query,
+                 "Task success": checks.end_state_matches(t, json.loads(e["Expected returns"]), int(e["Expected tickets"]))
+                                 and checks.no_false_success(t) and checks.arguments_match_schema(t)
+                                 and checks.only_approved_tools(t),
+                 "Tool calls": len(t.tool_calls),
+                 "Efficiency": checks.trajectory_efficiency(t, SHORTEST.get(t.trace_id, 1))})
+agent_metrics = pd.DataFrame(rows)
+print(f"Task success: {agent_metrics['Task success'].mean():.0%}")
+agent_metrics
+'''),
+        md("""
+The end state alone isn't enough for read-only requests. C02 changes nothing in the store, so its end state is
+"right", but it told the customer their order doesn't exist. That's why task success here also requires valid
+arguments and no made-up tools.
+"""),
+        code('''
+# The least efficient runs
+agent_metrics.sort_values("Efficiency").head(3)
+'''),
+        md("""
+## 4. Production
+
+This log is **synthetic** (made up for the demo), with one row per conversation.
+"""),
+        code('''
+log = pd.read_csv("data/production_log_synthetic.csv", keep_default_na=False)
+lat = log["Latency (s)"]
+print(f"{len(log)} conversations.  Latency p50: {lat.quantile(0.5):.1f}s   p99: {lat.quantile(0.99):.1f}s   mean: {lat.mean():.1f}s")
+log.groupby("Query Topic").agg(
+    conversations=("Trace ID", "count"),
+    judge_fail_rate=("Judge: Assumes device", lambda s: (s[s != ""] == "FAIL").mean() if (s != "").any() else None),
+    thumbs_down_rate=("Thumbs", lambda s: (s == "down").mean()),
+    p99_latency=("Latency (s)", lambda s: s.quantile(0.99)),
+).round(2)
+'''),
+        md("### What should a person read this week?\n\nJudge-flagged traces, negative feedback, outliers, and always some random ones."),
+        code('''
+review = pd.concat([
+    log[log["Judge: Assumes device"] == "FAIL"].sample(8, random_state=1).assign(Why="judge flagged"),
+    log[log["Thumbs"] == "down"].sample(6, random_state=1).assign(Why="thumbs down"),
+    log.nlargest(3, "Latency (s)").assign(Why="slowest"),
+    log.sample(8, random_state=2).assign(Why="random"),
+]).drop_duplicates("Trace ID")
+print(len(review), "traces to read. (The Assumes-device judge only runs on device questions.)")
+review[["Trace ID", "Query Topic", "Why"]]
+'''),
+        md("### Evaluate the handoff to a person like a classifier\n\nUse the conversations a person labeled."),
+        code('''
+labeled = log[log["Should escalate (human label)"] != ""].copy()
+labeled["should"] = labeled["Should escalate (human label)"].astype(str) == "True"
+labeled["did"] = labeled["Escalated"].astype(str) == "True"
+missed = int((labeled["should"] & ~labeled["did"]).sum())
+unneeded = int((~labeled["should"] & labeled["did"]).sum())
+print(f"Labeled conversations: {len(labeled)}")
+print(f"Missed escalations:    {missed} of {int(labeled['should'].sum())} that needed a person")
+print(f"Unneeded escalations:  {unneeded} of {int((~labeled['should']).sum())} that didn't")
+'''),
+        md("""
+## 5. Evals in CI
+
+`scripts/run_ci_evals.py` runs code checks on every change. Compare the suite threshold with the per-check gates.
+"""),
+        code('''
+import importlib.util
+
+spec = importlib.util.spec_from_file_location("run_ci_evals", "scripts/run_ci_evals.py")
+ci = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(ci)
+report = ci.run()
+print("Suite pass rate:", report["suite pass rate"], "->", report["suite gate"])
+display(pd.DataFrame(report["per-check gates"]).T)
+print("Ship it?", report["ship it"])
+'''),
+        md("""
+The suite clears its 90% threshold while three checks fail. A whole-suite threshold can hide a test that fails
+every time, so anything important gets its own gate.
+
+To explore traces span by span in Arize Phoenix, see `scripts/phoenix_demo.py`.
+"""),
+    ])
+
+
 if __name__ == "__main__":
     nb00()
     nb02()
     nb03()
     nb04()
+    nb_m4()
+    nb_m5()
+    nb_m6()

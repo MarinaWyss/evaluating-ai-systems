@@ -53,8 +53,22 @@ in `.env` using LiteLLM's `provider/model` names, for example `openai/gpt-4o-min
 | `02_error_analysis.ipynb` | Module 2, Exercises 2 and 3 | Read traces, write open codes, group them into failure modes |
 | `03a_rubric_agreement.ipynb` | Module 3, Exercise 4a | Write a rubric, label traces with a partner, measure agreement |
 | `03b_eval_suite.ipynb` | Module 3, Exercise 4b | Build the eval spreadsheet, a reference-based eval, and code checks |
+| `04_component_evals.ipynb` | Module 4, Exercises 5, 6, and 7 | Blame game, retrieval metrics, groundedness, tool-call checks |
+| `05_llm_judge.ipynb` | Module 5, Exercises 8 and 9 | Build a judge, align it on dev, test it once, correct a pass rate, swap test |
+| `06_agents_production.ipynb` | Module 6, Exercise 10 | Multi-agent autopsy, handoff assertions, agent metrics, a production log, CI gates |
 
-Module 1 has no notebook. Notebooks for Modules 4 to 6 are coming.
+Module 1 and Exercise 11 are on paper, so they have no notebook.
+
+## The three versions of the bot
+
+| Version | Used in | What it is |
+|---|---|---|
+| v1 (`bot.py`) | Opening to Module 3 | A RAG bot: retrieve chunks from the docs, then answer |
+| v2 (`agents.answer_v2`) | Module 4 | One agent with tools: `search_docs`, `lookup_order`, `start_return`, `check_warranty`, `create_ticket` (the handoff to a person). There's deliberately no refund tool |
+| v3 (`agents.answer_v3`) | Module 6 | A router hands each question to a Device Support agent or an Orders and Billing agent |
+
+The tools act on a small fake store (`store.py`) with five orders and four devices, reset before every run. Its
+"today" is fixed at October 5, 2026, so return windows and warranties behave the same every time.
 
 ## What's in the repo
 
@@ -65,6 +79,13 @@ beefcake/        the bot and the eval helpers
   classifier.py    which product is the customer asking about?
   traces.py        save, load, and print traces
   evals.py         failure rates, Wilson intervals, McNemar's test, Cohen's kappa, code checks
+  agents.py        versions 2 and 3: the agent loop, the router, and agent traces made of spans
+  tools.py         tool schemas, and running tool calls against the store
+  store.py         the fake store: orders, returns, warranties, tickets
+  checks.py        reusable code checks, agent metrics, and CI gates
+  judge.py         LLM judges, TPR and TNR, the Rogan-Gladen correction, the swap test, groundedness
+  retrieval_metrics.py  hit rate, recall, precision, MRR, nDCG
+  phoenix_export.py     optional: send traces to Arize Phoenix
   llm.py           one small wrapper around LiteLLM
 docs/            the product manuals, policies, and FAQ the bot answers from
 data/            test questions, traces, and exercise files
@@ -90,6 +111,19 @@ python scripts/generate_traces.py --prompt v1.1   # the prompt with the policy f
 Your live traces will fail in different ways from the curated ones. That's a good exercise in itself: code
 them the same way and compare.
 
+The agent traces for Modules 4 and 6 work the same way. The tool calls are planned by hand, but they run through
+the real agent loop and the real tools, so every tool result and end state is real. The Exercise 8 traces are
+built from templates and labeled with the "Assumes device" rubric. The production log in Module 6 is synthetic.
+
+To explore agent traces span by span in [Arize Phoenix](https://github.com/Arize-ai/phoenix), install it in a
+separate virtual environment (it can pull in a newer OpenAI SDK than LiteLLM supports), start it, and send traces to it:
+
+```bash
+pip install arize-phoenix && phoenix serve        # in its own environment; then open http://localhost:6006
+pip install arize-phoenix-otel                    # in this repo's environment
+python scripts/phoenix_demo.py                    # or --live to run v3 on a few questions first
+```
+
 ## For facilitators
 
 - **Answer keys** live in `answer_keys/`, which is gitignored so it never reaches the public repo. Bring it
@@ -99,3 +133,10 @@ them the same way and compare.
 - **If you change the docs or the curated answers,** run `python scripts/build_curated_data.py`, then
   `python -m pytest -q`. The tests check that retrieval and the failure counts still match the slides.
   That script is gitignored like `answer_keys/`, because it contains the Exercise 4a labels.
+  For Modules 4 to 6, the same goes for `scripts/build_agent_data.py`, which writes the Exercise 5, 6, 7, and
+  10 answer keys.
+- **Record the judge runs once,** with a key: `python scripts/record_example_runs.py`, then commit
+  `data/example_runs/`. The Module 5 notebook shows that run to anyone without a key, and the swap-test result
+  on the M5.14 slide comes from it.
+- **Evals in CI:** `python scripts/run_ci_evals.py` exits with an error when a gate fails. On the stored traces
+  it fails on purpose, to show that a 90% suite threshold can pass while individual checks fail.

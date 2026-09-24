@@ -29,6 +29,10 @@ class Chunk:
     doc: str         # document title, for example "BeefCake Pulse manual"
     heading: str     # section heading
     text: str        # section body
+    section_id: str = ""  # the section this chunk came from (same as id unless sections are split)
+
+    def __post_init__(self):
+        self.section_id = self.section_id or self.id
 
     def as_context(self) -> str:
         return f"[{self.doc} > {self.heading}]\n{self.text}"
@@ -42,7 +46,25 @@ def tokenize(text: str) -> list[str]:
     return [t for t in re.findall(r"[a-z0-9]+", text.lower()) if t not in STOPWORDS]
 
 
-def load_chunks(docs_dir: Path = DOCS_DIR) -> list[Chunk]:
+def _split(chunk: Chunk, max_words: int) -> list[Chunk]:
+    """Split one section into smaller chunks of whole sentences, up to max_words each.
+    A single sentence longer than max_words stays whole, so some chunks run over."""
+    sentences = re.split(r"(?<=[.!?])\s+", chunk.text)
+    pieces, current = [], []
+    for sentence in sentences:
+        if current and len(" ".join(current + [sentence]).split()) > max_words:
+            pieces.append(" ".join(current))
+            current = []
+        current.append(sentence)
+    if current:
+        pieces.append(" ".join(current))
+    if len(pieces) == 1:
+        return [chunk]
+    return [Chunk(f"{chunk.id}~{i}", chunk.doc, chunk.heading, text, chunk.id) for i, text in enumerate(pieces, 1)]
+
+
+def load_chunks(docs_dir: Path = DOCS_DIR, max_words: int | None = None) -> list[Chunk]:
+    """One chunk per '## ' section. With max_words, long sections are split into smaller chunks."""
     chunks = []
     for path in sorted(Path(docs_dir).glob("*.md")):
         lines = path.read_text().splitlines()
@@ -55,6 +77,8 @@ def load_chunks(docs_dir: Path = DOCS_DIR) -> list[Chunk]:
                 heading, body = line[3:].strip(), []
             else:
                 body.append(line)
+    if max_words:
+        chunks = [piece for c in chunks for piece in _split(c, max_words)]
     return chunks
 
 

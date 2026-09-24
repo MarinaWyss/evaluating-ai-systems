@@ -1,0 +1,601 @@
+Trace ID,Day,Query Topic,Latency (s),Tokens,Cost (USD),Thumbs,Escalated,Should escalate (human label),Judge: Assumes device
+P0001,2026-09-01,returns and warranty,4.53,2449,0.00147,up,False,,
+P0002,2026-09-01,pairing,2.42,1987,0.00119,,False,False,PASS
+P0003,2026-09-01,device troubleshooting,1.28,1032,0.00062,,False,,PASS
+P0004,2026-09-01,device troubleshooting,1.52,1484,0.00089,up,False,,FAIL
+P0005,2026-09-01,device troubleshooting,1.04,2055,0.00123,,False,,FAIL
+P0006,2026-09-01,device troubleshooting,1.96,1223,0.00073,,True,True,PASS
+P0007,2026-09-01,pairing,2.48,1184,0.00071,,False,False,PASS
+P0008,2026-09-01,device troubleshooting,1.95,1473,0.00088,,False,False,PASS
+P0009,2026-09-01,device troubleshooting,2.0,1133,0.00068,down,False,False,PASS
+P0010,2026-09-01,device troubleshooting,2.62,1677,0.00101,,False,,FAIL
+P0011,2026-09-01,returns and warranty,2.96,1673,0.001,,False,False,
+P0012,2026-09-01,returns and warranty,4.12,2445,0.00147,,True,,
+P0013,2026-09-01,device troubleshooting,1.06,1551,0.00093,,False,,FAIL
+P0014,2026-09-01,subscription and billing,2.28,1374,0.00082,,True,,
+P0015,2026-09-01,pairing,2.3,1319,0.00079,up,False,,PASS
+P0016,2026-09-01,device troubleshooting,2.17,1523,0.00091,,False,,PASS
+P0017,2026-09-01,returns and warranty,2.73,1473,0.00088,up,False,,
+P0018,2026-09-01,subscription and billing,2.96,1350,0.00081,,False,,
+P0019,2026-09-01,returns and warranty,2.91,2097,0.00126,down,False,,
+P0020,2026-09-01,device troubleshooting,0.98,1896,0.00114,down,False,,PASS
+P0021,2026-09-01,device troubleshooting,1.48,1258,0.00075,,False,,PASS
+P0022,2026-09-01,device troubleshooting,1.99,742,0.00045,,True,False,FAIL
+P0023,2026-09-01,device troubleshooting,1.98,1605,0.00096,,False,False,PASS
+P0024,2026-09-01,device troubleshooting,1.35,1509,0.00091,,False,,PASS
+P0025,2026-09-01,device troubleshooting,0.89,1179,0.00071,,False,,PASS
+P0026,2026-09-01,returns and warranty,2.67,2206,0.00132,down,False,,
+P0027,2026-09-01,device troubleshooting,2.63,1599,0.00096,down,False,False,FAIL
+P0028,2026-09-01,device troubleshooting,1.71,1144,0.00069,,False,,FAIL
+P0029,2026-09-01,pairing,1.61,1476,0.00089,,False,,PASS
+P0030,2026-09-01,device troubleshooting,4.11,1821,0.00109,down,False,False,FAIL
+P0031,2026-09-01,device troubleshooting,2.0,1047,0.00063,up,False,,PASS
+P0032,2026-09-01,returns and warranty,2.61,2046,0.00123,,False,False,
+P0033,2026-09-01,returns and warranty,11.28,2120,0.00127,,False,,
+P0034,2026-09-01,device troubleshooting,1.82,1326,0.0008,up,False,,PASS
+P0035,2026-09-01,subscription and billing,2.26,1159,0.0007,,False,,
+P0036,2026-09-01,returns and warranty,4.83,2021,0.00121,up,False,False,
+P0037,2026-09-01,pairing,1.02,1808,0.00108,up,False,,PASS
+P0038,2026-09-01,returns and warranty,1.5,1862,0.00112,up,False,False,
+P0039,2026-09-01,subscription and billing,5.08,1464,0.00088,,False,False,
+P0040,2026-09-01,pairing,1.59,1560,0.00094,up,False,,PASS
+P0041,2026-09-01,device troubleshooting,1.1,1209,0.00073,,False,,FAIL
+P0042,2026-09-01,subscription and billing,4.38,1529,0.00092,up,False,,
+P0043,2026-09-01,device troubleshooting,2.87,1792,0.00108,up,False,,PASS
+P0044,2026-09-02,returns and warranty,1.71,1545,0.00093,up,False,,
+P0045,2026-09-02,returns and warranty,4.39,2211,0.00133,up,False,False,
+P0046,2026-09-02,returns and warranty,2.18,2085,0.00125,,False,,
+P0047,2026-09-02,subscription and billing,2.58,1587,0.00095,up,False,,
+P0048,2026-09-02,returns and warranty,2.14,1968,0.00118,,False,,
+P0049,2026-09-02,device troubleshooting,2.61,1398,0.00084,,False,,FAIL
+P0050,2026-09-02,out of scope,1.15,1287,0.00077,,False,False,
+P0051,2026-09-02,subscription and billing,1.68,1273,0.00076,,False,,
+P0052,2026-09-02,returns and warranty,4.85,2338,0.0014,,False,,
+P0053,2026-09-02,subscription and billing,2.75,1315,0.00079,,False,,
+P0054,2026-09-02,device troubleshooting,1.09,864,0.00052,up,False,,PASS
+P0055,2026-09-02,subscription and billing,1.78,1212,0.00073,,False,,
+P0056,2026-09-02,returns and warranty,2.67,2109,0.00127,,False,,
+P0057,2026-09-02,device troubleshooting,1.65,1500,0.0009,down,False,,FAIL
+P0058,2026-09-02,device troubleshooting,2.44,1300,0.00078,,False,,PASS
+P0059,2026-09-02,device troubleshooting,1.39,1836,0.0011,down,False,,PASS
+P0060,2026-09-02,pairing,2.86,1092,0.00066,down,False,,PASS
+P0061,2026-09-02,returns and warranty,3.61,2494,0.0015,,True,,
+P0062,2026-09-02,device troubleshooting,3.54,1928,0.00116,,False,,PASS
+P0063,2026-09-02,device troubleshooting,1.44,1666,0.001,up,False,,PASS
+P0064,2026-09-02,pairing,0.7,1225,0.00073,,True,False,FAIL
+P0065,2026-09-02,returns and warranty,3.13,1616,0.00097,down,False,False,
+P0066,2026-09-02,returns and warranty,3.02,2359,0.00142,,False,,
+P0067,2026-09-02,out of scope,1.67,1563,0.00094,,False,False,
+P0068,2026-09-02,device troubleshooting,3.21,1438,0.00086,,False,,PASS
+P0069,2026-09-02,returns and warranty,5.0,2680,0.00161,,False,,
+P0070,2026-09-02,subscription and billing,5.52,1292,0.00078,,False,False,
+P0071,2026-09-02,returns and warranty,3.25,1922,0.00115,,False,,
+P0072,2026-09-02,device troubleshooting,1.96,1644,0.00099,,False,,PASS
+P0073,2026-09-02,returns and warranty,3.49,1499,0.0009,,False,,
+P0074,2026-09-02,device troubleshooting,1.97,1288,0.00077,,False,,PASS
+P0075,2026-09-02,pairing,0.72,1387,0.00083,,False,,PASS
+P0076,2026-09-02,device troubleshooting,1.76,787,0.00047,,False,,PASS
+P0077,2026-09-02,device troubleshooting,1.92,1279,0.00077,,False,,PASS
+P0078,2026-09-02,device troubleshooting,3.07,1518,0.00091,down,False,False,PASS
+P0079,2026-09-02,device troubleshooting,1.42,1755,0.00105,down,False,,FAIL
+P0080,2026-09-02,subscription and billing,0.91,682,0.00041,up,False,,
+P0081,2026-09-02,returns and warranty,2.17,2232,0.00134,,False,,
+P0082,2026-09-02,device troubleshooting,1.41,1702,0.00102,,False,False,FAIL
+P0083,2026-09-02,device troubleshooting,2.09,1415,0.00085,,False,False,PASS
+P0084,2026-09-02,pairing,1.98,1858,0.00111,,False,False,FAIL
+P0085,2026-09-02,device troubleshooting,1.08,1573,0.00094,,False,,FAIL
+P0086,2026-09-02,device troubleshooting,4.51,1805,0.00108,,True,False,PASS
+P0087,2026-09-03,returns and warranty,1.63,1670,0.001,,False,,
+P0088,2026-09-03,returns and warranty,0.81,1904,0.00114,,False,,
+P0089,2026-09-03,pairing,1.59,1754,0.00105,up,False,,PASS
+P0090,2026-09-03,returns and warranty,4.78,1740,0.00104,,True,,
+P0091,2026-09-03,returns and warranty,6.32,2656,0.00159,,False,,
+P0092,2026-09-03,returns and warranty,5.02,1746,0.00105,up,False,,
+P0093,2026-09-03,device troubleshooting,3.95,1238,0.00074,,False,False,FAIL
+P0094,2026-09-03,pairing,1.97,1941,0.00116,,False,,PASS
+P0095,2026-09-03,device troubleshooting,2.17,1875,0.00112,,False,False,FAIL
+P0096,2026-09-03,device troubleshooting,2.19,819,0.00049,,False,,PASS
+P0097,2026-09-03,out of scope,1.73,1206,0.00072,,False,,
+P0098,2026-09-03,subscription and billing,1.87,1915,0.00115,up,False,,
+P0099,2026-09-03,returns and warranty,6.11,1943,0.00117,up,False,,
+P0100,2026-09-03,out of scope,1.32,1379,0.00083,,False,,
+P0101,2026-09-03,subscription and billing,0.45,1590,0.00095,,False,,
+P0102,2026-09-03,subscription and billing,2.53,1803,0.00108,,False,,
+P0103,2026-09-03,out of scope,0.87,1373,0.00082,,False,False,
+P0104,2026-09-03,returns and warranty,4.31,2756,0.00165,down,False,,
+P0105,2026-09-03,device troubleshooting,1.22,908,0.00054,,False,,PASS
+P0106,2026-09-03,out of scope,1.12,1131,0.00068,,False,,
+P0107,2026-09-03,returns and warranty,1.54,2392,0.00144,up,False,,
+P0108,2026-09-03,out of scope,1.55,2308,0.00138,,False,,
+P0109,2026-09-03,pairing,2.09,1623,0.00097,,False,False,PASS
+P0110,2026-09-03,device troubleshooting,1.44,1112,0.00067,,False,,PASS
+P0111,2026-09-03,returns and warranty,4.69,2620,0.00157,,False,,
+P0112,2026-09-03,out of scope,1.35,1510,0.00091,up,False,,
+P0113,2026-09-03,returns and warranty,3.1,1406,0.00084,,False,True,
+P0114,2026-09-03,device troubleshooting,0.99,1191,0.00071,,False,False,PASS
+P0115,2026-09-03,returns and warranty,3.49,1826,0.0011,,False,,
+P0116,2026-09-03,returns and warranty,5.2,2076,0.00125,,False,,
+P0117,2026-09-03,device troubleshooting,1.06,1832,0.0011,,False,,PASS
+P0118,2026-09-03,device troubleshooting,2.88,1924,0.00115,,False,False,FAIL
+P0119,2026-09-03,returns and warranty,1.53,2489,0.00149,,False,,
+P0120,2026-09-03,pairing,1.42,1279,0.00077,,False,,PASS
+P0121,2026-09-03,device troubleshooting,1.33,1227,0.00074,,True,,PASS
+P0122,2026-09-03,pairing,4.61,1930,0.00116,down,False,True,FAIL
+P0123,2026-09-03,device troubleshooting,2.17,1292,0.00078,up,True,,PASS
+P0124,2026-09-03,device troubleshooting,1.81,2049,0.00123,,False,,PASS
+P0125,2026-09-03,returns and warranty,8.47,2078,0.00125,down,False,False,
+P0126,2026-09-03,device troubleshooting,0.84,1563,0.00094,,False,False,PASS
+P0127,2026-09-03,device troubleshooting,1.22,1343,0.00081,,False,,PASS
+P0128,2026-09-03,pairing,1.79,685,0.00041,,False,,PASS
+P0129,2026-09-03,pairing,2.19,1679,0.00101,,False,False,PASS
+P0130,2026-09-04,pairing,1.09,2029,0.00122,,True,,PASS
+P0131,2026-09-04,device troubleshooting,1.39,1225,0.00073,,False,False,PASS
+P0132,2026-09-04,returns and warranty,1.79,1651,0.00099,,False,,
+P0133,2026-09-04,device troubleshooting,0.78,1687,0.00101,,False,,PASS
+P0134,2026-09-04,subscription and billing,2.99,1757,0.00105,up,True,,
+P0135,2026-09-04,device troubleshooting,1.54,975,0.00059,up,False,,FAIL
+P0136,2026-09-04,device troubleshooting,3.36,1257,0.00075,,False,,PASS
+P0137,2026-09-04,device troubleshooting,1.25,1554,0.00093,,False,,PASS
+P0138,2026-09-04,device troubleshooting,1.12,971,0.00058,up,False,,PASS
+P0139,2026-09-04,device troubleshooting,4.7,1614,0.00097,,False,,FAIL
+P0140,2026-09-04,device troubleshooting,36.2,779,0.00047,down,False,,FAIL
+P0141,2026-09-04,subscription and billing,2.19,1655,0.00099,,False,,
+P0142,2026-09-04,pairing,1.24,1226,0.00074,up,True,True,PASS
+P0143,2026-09-04,subscription and billing,0.74,1227,0.00074,,False,False,
+P0144,2026-09-04,returns and warranty,5.14,2635,0.00158,,False,,
+P0145,2026-09-04,device troubleshooting,2.12,1318,0.00079,,False,,FAIL
+P0146,2026-09-04,returns and warranty,2.61,1562,0.00094,,True,,
+P0147,2026-09-04,subscription and billing,1.32,1381,0.00083,,True,,
+P0148,2026-09-04,returns and warranty,1.93,2832,0.0017,,True,,
+P0149,2026-09-04,device troubleshooting,5.48,1535,0.00092,,False,False,PASS
+P0150,2026-09-04,subscription and billing,1.48,1039,0.00062,,False,True,
+P0151,2026-09-04,device troubleshooting,2.52,2186,0.00131,up,False,,FAIL
+P0152,2026-09-04,returns and warranty,7.16,1534,0.00092,,True,,
+P0153,2026-09-04,subscription and billing,1.33,1618,0.00097,,False,,
+P0154,2026-09-04,device troubleshooting,2.5,1806,0.00108,,False,,PASS
+P0155,2026-09-04,returns and warranty,2.04,1555,0.00093,,False,False,
+P0156,2026-09-04,subscription and billing,1.02,1368,0.00082,,False,,
+P0157,2026-09-04,returns and warranty,3.51,2818,0.00169,down,False,,
+P0158,2026-09-04,device troubleshooting,2.16,1438,0.00086,,False,,PASS
+P0159,2026-09-04,returns and warranty,7.64,2388,0.00143,down,False,False,
+P0160,2026-09-04,returns and warranty,2.71,2241,0.00134,,False,,
+P0161,2026-09-04,subscription and billing,1.6,1392,0.00084,,False,,
+P0162,2026-09-04,pairing,1.5,1254,0.00075,,False,False,PASS
+P0163,2026-09-04,returns and warranty,3.11,2208,0.00132,up,False,,
+P0164,2026-09-04,device troubleshooting,1.54,1112,0.00067,up,False,False,FAIL
+P0165,2026-09-04,device troubleshooting,3.11,1201,0.00072,,False,False,FAIL
+P0166,2026-09-04,device troubleshooting,3.67,1314,0.00079,,False,,PASS
+P0167,2026-09-04,out of scope,0.94,1388,0.00083,,False,,
+P0168,2026-09-04,subscription and billing,0.72,1569,0.00094,,False,,
+P0169,2026-09-04,returns and warranty,2.79,2695,0.00162,,False,,
+P0170,2026-09-04,returns and warranty,6.53,2343,0.00141,,False,,
+P0171,2026-09-04,device troubleshooting,1.37,1248,0.00075,,False,False,PASS
+P0172,2026-09-04,device troubleshooting,1.0,1855,0.00111,,False,False,PASS
+P0173,2026-09-05,returns and warranty,2.35,2279,0.00137,,True,,
+P0174,2026-09-05,subscription and billing,2.97,912,0.00055,,False,,
+P0175,2026-09-05,device troubleshooting,2.19,1122,0.00067,,False,,FAIL
+P0176,2026-09-05,subscription and billing,3.36,835,0.0005,up,False,,
+P0177,2026-09-05,device troubleshooting,2.54,1312,0.00079,,False,,PASS
+P0178,2026-09-05,returns and warranty,2.97,2122,0.00127,,True,,
+P0179,2026-09-05,returns and warranty,3.43,1198,0.00072,,False,,
+P0180,2026-09-05,device troubleshooting,2.17,1097,0.00066,down,False,False,PASS
+P0181,2026-09-05,subscription and billing,1.56,1566,0.00094,,False,,
+P0182,2026-09-05,device troubleshooting,1.95,1551,0.00093,,False,False,PASS
+P0183,2026-09-05,device troubleshooting,1.55,1971,0.00118,,False,,PASS
+P0184,2026-09-05,pairing,1.57,2414,0.00145,up,False,False,PASS
+P0185,2026-09-05,device troubleshooting,1.07,1503,0.0009,,False,,PASS
+P0186,2026-09-05,device troubleshooting,1.05,1510,0.00091,,False,,PASS
+P0187,2026-09-05,returns and warranty,3.22,2079,0.00125,down,False,,
+P0188,2026-09-05,device troubleshooting,5.46,1103,0.00066,,False,,PASS
+P0189,2026-09-05,returns and warranty,1.23,3144,0.00189,,False,False,
+P0190,2026-09-05,subscription and billing,0.81,1124,0.00067,up,False,,
+P0191,2026-09-05,device troubleshooting,1.13,1760,0.00106,,False,,FAIL
+P0192,2026-09-05,device troubleshooting,2.95,1371,0.00082,,False,,PASS
+P0193,2026-09-05,returns and warranty,3.0,2592,0.00156,,False,False,
+P0194,2026-09-05,pairing,2.18,1247,0.00075,,False,,PASS
+P0195,2026-09-05,pairing,1.44,1022,0.00061,up,False,False,FAIL
+P0196,2026-09-05,returns and warranty,3.53,2087,0.00125,up,False,,
+P0197,2026-09-05,device troubleshooting,3.59,1588,0.00095,up,False,,PASS
+P0198,2026-09-05,returns and warranty,1.1,2227,0.00134,up,False,,
+P0199,2026-09-05,device troubleshooting,2.17,1156,0.00069,,False,False,PASS
+P0200,2026-09-05,subscription and billing,1.41,1261,0.00076,,False,,
+P0201,2026-09-05,device troubleshooting,1.6,689,0.00041,,False,,PASS
+P0202,2026-09-05,subscription and billing,1.67,2374,0.00142,down,True,,
+P0203,2026-09-05,returns and warranty,3.23,1926,0.00116,,False,,
+P0204,2026-09-05,out of scope,1.43,1576,0.00095,,False,,
+P0205,2026-09-05,device troubleshooting,2.73,1185,0.00071,,False,,FAIL
+P0206,2026-09-05,returns and warranty,2.37,1605,0.00096,,False,,
+P0207,2026-09-05,device troubleshooting,2.3,1659,0.001,up,False,False,FAIL
+P0208,2026-09-05,subscription and billing,1.73,1027,0.00062,,False,,
+P0209,2026-09-05,returns and warranty,2.55,2290,0.00137,,False,,
+P0210,2026-09-05,returns and warranty,7.06,1867,0.00112,,False,,
+P0211,2026-09-05,device troubleshooting,1.7,729,0.00044,,False,,FAIL
+P0212,2026-09-05,device troubleshooting,0.75,1888,0.00113,up,False,,PASS
+P0213,2026-09-05,out of scope,10.12,1362,0.00082,,True,,
+P0214,2026-09-05,device troubleshooting,1.0,1806,0.00108,up,False,,FAIL
+P0215,2026-09-05,out of scope,3.21,1646,0.00099,,False,,
+P0216,2026-09-06,subscription and billing,1.88,1246,0.00075,,False,,
+P0217,2026-09-06,subscription and billing,1.89,1592,0.00096,,False,,
+P0218,2026-09-06,returns and warranty,4.62,966,0.00058,up,False,False,
+P0219,2026-09-06,subscription and billing,5.56,1429,0.00086,down,False,,
+P0220,2026-09-06,device troubleshooting,1.9,1302,0.00078,,False,False,PASS
+P0221,2026-09-06,subscription and billing,1.67,1413,0.00085,,False,False,
+P0222,2026-09-06,device troubleshooting,3.28,1854,0.00111,down,False,,FAIL
+P0223,2026-09-06,subscription and billing,2.35,1432,0.00086,down,False,,
+P0224,2026-09-06,device troubleshooting,2.18,1485,0.00089,,False,,PASS
+P0225,2026-09-06,returns and warranty,2.25,1858,0.00111,,False,False,
+P0226,2026-09-06,out of scope,0.77,1938,0.00116,,False,False,
+P0227,2026-09-06,returns and warranty,1.96,2481,0.00149,down,False,,
+P0228,2026-09-06,pairing,2.4,2129,0.00128,down,False,False,PASS
+P0229,2026-09-06,out of scope,2.6,1666,0.001,,False,,
+P0230,2026-09-06,subscription and billing,1.62,1313,0.00079,,True,,
+P0231,2026-09-06,device troubleshooting,3.32,1663,0.001,,False,,PASS
+P0232,2026-09-06,subscription and billing,1.87,1534,0.00092,,False,False,
+P0233,2026-09-06,device troubleshooting,4.79,861,0.00052,,False,,FAIL
+P0234,2026-09-06,returns and warranty,7.87,2155,0.00129,,False,,
+P0235,2026-09-06,subscription and billing,2.06,1195,0.00072,down,False,,
+P0236,2026-09-06,pairing,1.03,1716,0.00103,,False,,PASS
+P0237,2026-09-06,out of scope,1.99,1714,0.00103,up,False,False,
+P0238,2026-09-06,pairing,2.27,1489,0.00089,down,False,False,PASS
+P0239,2026-09-06,device troubleshooting,1.55,1395,0.00084,,False,,PASS
+P0240,2026-09-06,subscription and billing,1.02,1463,0.00088,,False,,
+P0241,2026-09-06,returns and warranty,2.93,1194,0.00072,up,True,,
+P0242,2026-09-06,subscription and billing,1.68,1272,0.00076,,False,False,
+P0243,2026-09-06,returns and warranty,4.26,2964,0.00178,,False,,
+P0244,2026-09-06,device troubleshooting,8.12,1068,0.00064,,False,False,PASS
+P0245,2026-09-06,subscription and billing,2.17,1366,0.00082,,False,,
+P0246,2026-09-06,subscription and billing,4.66,1272,0.00076,,False,False,
+P0247,2026-09-06,subscription and billing,4.25,1636,0.00098,,False,,
+P0248,2026-09-06,subscription and billing,1.06,1978,0.00119,,False,,
+P0249,2026-09-06,device troubleshooting,2.86,1207,0.00072,,True,,PASS
+P0250,2026-09-06,device troubleshooting,2.14,1111,0.00067,,False,,FAIL
+P0251,2026-09-06,subscription and billing,1.51,1396,0.00084,,False,,
+P0252,2026-09-06,subscription and billing,1.05,1574,0.00094,,False,False,
+P0253,2026-09-06,device troubleshooting,1.09,1087,0.00065,up,False,,FAIL
+P0254,2026-09-06,subscription and billing,3.07,1533,0.00092,up,False,False,
+P0255,2026-09-06,device troubleshooting,1.11,1780,0.00107,down,False,,FAIL
+P0256,2026-09-06,device troubleshooting,1.52,1589,0.00095,,True,,PASS
+P0257,2026-09-06,returns and warranty,2.26,2602,0.00156,,True,,
+P0258,2026-09-06,device troubleshooting,4.93,1931,0.00116,,False,False,PASS
+P0259,2026-09-07,device troubleshooting,1.35,1767,0.00106,,False,False,FAIL
+P0260,2026-09-07,returns and warranty,2.91,1687,0.00101,,False,,
+P0261,2026-09-07,device troubleshooting,1.33,1373,0.00082,,False,,PASS
+P0262,2026-09-07,device troubleshooting,0.63,1732,0.00104,,True,,PASS
+P0263,2026-09-07,returns and warranty,1.74,1905,0.00114,,False,,
+P0264,2026-09-07,subscription and billing,2.05,1155,0.00069,,False,,
+P0265,2026-09-07,device troubleshooting,0.7,1386,0.00083,,False,False,FAIL
+P0266,2026-09-07,subscription and billing,1.88,1785,0.00107,,False,,
+P0267,2026-09-07,subscription and billing,2.13,1098,0.00066,,False,,
+P0268,2026-09-07,returns and warranty,3.48,1985,0.00119,,False,,
+P0269,2026-09-07,device troubleshooting,0.72,1235,0.00074,up,False,False,FAIL
+P0270,2026-09-07,pairing,1.66,2275,0.00136,,False,,PASS
+P0271,2026-09-07,device troubleshooting,1.4,1396,0.00084,,False,,FAIL
+P0272,2026-09-07,subscription and billing,2.21,1372,0.00082,up,False,,
+P0273,2026-09-07,device troubleshooting,11.84,758,0.00045,,False,,PASS
+P0274,2026-09-07,returns and warranty,1.45,2784,0.00167,,False,,
+P0275,2026-09-07,device troubleshooting,2.6,961,0.00058,,False,,PASS
+P0276,2026-09-07,device troubleshooting,1.43,1358,0.00081,down,False,,PASS
+P0277,2026-09-07,returns and warranty,5.2,2431,0.00146,,True,,
+P0278,2026-09-07,subscription and billing,5.79,1516,0.00091,up,False,,
+P0279,2026-09-07,returns and warranty,1.27,1647,0.00099,up,False,,
+P0280,2026-09-07,device troubleshooting,2.26,796,0.00048,,False,,PASS
+P0281,2026-09-07,device troubleshooting,3.01,1486,0.00089,,True,,PASS
+P0282,2026-09-07,returns and warranty,2.91,2515,0.00151,,False,,
+P0283,2026-09-07,returns and warranty,1.46,2588,0.00155,,False,False,
+P0284,2026-09-07,subscription and billing,2.39,1342,0.00081,,False,False,
+P0285,2026-09-07,returns and warranty,3.7,1950,0.00117,,False,,
+P0286,2026-09-07,out of scope,2.48,1220,0.00073,down,False,,
+P0287,2026-09-07,subscription and billing,2.16,1651,0.00099,down,False,,
+P0288,2026-09-07,subscription and billing,3.2,1591,0.00095,,False,,
+P0289,2026-09-07,device troubleshooting,2.02,1006,0.0006,,False,,PASS
+P0290,2026-09-07,returns and warranty,0.94,1951,0.00117,,False,,
+P0291,2026-09-07,device troubleshooting,1.78,1428,0.00086,,False,,PASS
+P0292,2026-09-07,returns and warranty,3.22,2857,0.00171,,False,,
+P0293,2026-09-07,subscription and billing,0.97,1445,0.00087,,False,,
+P0294,2026-09-07,returns and warranty,2.45,1989,0.00119,,False,False,
+P0295,2026-09-07,returns and warranty,1.47,1912,0.00115,,False,,
+P0296,2026-09-07,subscription and billing,1.37,1762,0.00106,,False,,
+P0297,2026-09-07,device troubleshooting,4.53,1961,0.00118,,False,,PASS
+P0298,2026-09-07,subscription and billing,3.07,980,0.00059,,False,,
+P0299,2026-09-07,device troubleshooting,1.95,1383,0.00083,,False,False,PASS
+P0300,2026-09-07,device troubleshooting,2.37,1462,0.00088,up,True,,PASS
+P0301,2026-09-08,device troubleshooting,3.16,1075,0.00064,,False,,PASS
+P0302,2026-09-08,returns and warranty,5.29,2828,0.0017,,False,,
+P0303,2026-09-08,subscription and billing,1.76,1630,0.00098,,False,,
+P0304,2026-09-08,device troubleshooting,0.45,1787,0.00107,,False,,PASS
+P0305,2026-09-08,subscription and billing,4.01,1084,0.00065,,False,,
+P0306,2026-09-08,pairing,1.82,1440,0.00086,up,False,,PASS
+P0307,2026-09-08,subscription and billing,1.34,1103,0.00066,up,True,False,
+P0308,2026-09-08,pairing,2.12,1025,0.00061,,False,,PASS
+P0309,2026-09-08,subscription and billing,1.66,1122,0.00067,up,False,,
+P0310,2026-09-08,device troubleshooting,0.61,1383,0.00083,down,False,,FAIL
+P0311,2026-09-08,pairing,0.98,1400,0.00084,,False,,PASS
+P0312,2026-09-08,device troubleshooting,2.07,1290,0.00077,,False,,PASS
+P0313,2026-09-08,subscription and billing,2.27,1980,0.00119,up,False,,
+P0314,2026-09-08,pairing,4.08,1076,0.00065,,False,False,PASS
+P0315,2026-09-08,pairing,1.91,1263,0.00076,,False,,PASS
+P0316,2026-09-08,device troubleshooting,4.07,1412,0.00085,,False,,FAIL
+P0317,2026-09-08,out of scope,2.03,1034,0.00062,,False,False,
+P0318,2026-09-08,device troubleshooting,2.35,989,0.00059,,True,,FAIL
+P0319,2026-09-08,subscription and billing,1.89,1162,0.0007,,False,False,
+P0320,2026-09-08,returns and warranty,9.69,3157,0.00189,,False,False,
+P0321,2026-09-08,subscription and billing,2.41,1061,0.00064,,False,,
+P0322,2026-09-08,device troubleshooting,1.2,1064,0.00064,down,False,,PASS
+P0323,2026-09-08,pairing,0.55,1279,0.00077,,False,False,FAIL
+P0324,2026-09-08,device troubleshooting,3.13,1331,0.0008,,True,,FAIL
+P0325,2026-09-08,device troubleshooting,1.52,1272,0.00076,,False,,FAIL
+P0326,2026-09-08,device troubleshooting,2.63,741,0.00044,,False,False,PASS
+P0327,2026-09-08,device troubleshooting,1.44,1380,0.00083,down,False,,FAIL
+P0328,2026-09-08,returns and warranty,2.38,2318,0.00139,,False,False,
+P0329,2026-09-08,returns and warranty,7.63,2110,0.00127,up,False,,
+P0330,2026-09-08,device troubleshooting,1.08,1603,0.00096,down,False,,PASS
+P0331,2026-09-08,subscription and billing,2.69,1345,0.00081,,False,,
+P0332,2026-09-08,device troubleshooting,2.03,1572,0.00094,,False,,PASS
+P0333,2026-09-08,device troubleshooting,1.84,1288,0.00077,,False,False,PASS
+P0334,2026-09-08,returns and warranty,37.65,2069,0.00124,,False,False,
+P0335,2026-09-08,subscription and billing,2.23,1056,0.00063,,False,False,
+P0336,2026-09-08,returns and warranty,2.01,2475,0.00148,,False,,
+P0337,2026-09-08,device troubleshooting,3.0,1884,0.00113,up,False,,PASS
+P0338,2026-09-08,device troubleshooting,2.78,1604,0.00096,,False,False,FAIL
+P0339,2026-09-08,subscription and billing,1.66,1563,0.00094,,False,,
+P0340,2026-09-08,subscription and billing,4.34,1468,0.00088,up,False,,
+P0341,2026-09-08,device troubleshooting,2.02,1065,0.00064,up,True,,PASS
+P0342,2026-09-08,returns and warranty,3.18,1905,0.00114,,False,,
+P0343,2026-09-08,device troubleshooting,5.47,1197,0.00072,,True,,PASS
+P0344,2026-09-09,subscription and billing,2.06,1334,0.0008,,False,,
+P0345,2026-09-09,subscription and billing,7.19,1130,0.00068,,False,,
+P0346,2026-09-09,device troubleshooting,2.2,1247,0.00075,,False,False,FAIL
+P0347,2026-09-09,device troubleshooting,2.04,1668,0.001,,False,,FAIL
+P0348,2026-09-09,device troubleshooting,3.08,1663,0.001,,False,,FAIL
+P0349,2026-09-09,subscription and billing,2.89,973,0.00058,,False,,
+P0350,2026-09-09,out of scope,2.52,1382,0.00083,,False,,
+P0351,2026-09-09,returns and warranty,2.99,1854,0.00111,,False,,
+P0352,2026-09-09,returns and warranty,3.72,2199,0.00132,,True,,
+P0353,2026-09-09,pairing,1.79,1267,0.00076,,False,,PASS
+P0354,2026-09-09,device troubleshooting,2.31,1563,0.00094,,False,,PASS
+P0355,2026-09-09,returns and warranty,1.98,1524,0.00091,,False,,
+P0356,2026-09-09,device troubleshooting,1.38,1303,0.00078,,False,False,PASS
+P0357,2026-09-09,device troubleshooting,1.54,1111,0.00067,,False,,PASS
+P0358,2026-09-09,device troubleshooting,1.23,1128,0.00068,,False,False,PASS
+P0359,2026-09-09,subscription and billing,1.69,1512,0.00091,,False,,
+P0360,2026-09-09,returns and warranty,1.56,2562,0.00154,,False,,
+P0361,2026-09-09,pairing,3.83,1279,0.00077,,False,False,PASS
+P0362,2026-09-09,returns and warranty,4.45,1755,0.00105,down,True,True,
+P0363,2026-09-09,device troubleshooting,2.69,1715,0.00103,up,False,,PASS
+P0364,2026-09-09,device troubleshooting,2.04,1391,0.00083,down,False,,PASS
+P0365,2026-09-09,returns and warranty,4.04,2318,0.00139,,False,,
+P0366,2026-09-09,pairing,3.66,1511,0.00091,,False,,PASS
+P0367,2026-09-09,returns and warranty,4.26,2212,0.00133,up,False,,
+P0368,2026-09-09,subscription and billing,1.51,1114,0.00067,,True,,
+P0369,2026-09-09,subscription and billing,1.71,1279,0.00077,,False,,
+P0370,2026-09-09,device troubleshooting,2.86,1272,0.00076,,True,,PASS
+P0371,2026-09-09,returns and warranty,3.02,1768,0.00106,down,False,,
+P0372,2026-09-09,subscription and billing,2.07,1364,0.00082,,False,,
+P0373,2026-09-09,subscription and billing,1.93,1283,0.00077,down,False,,
+P0374,2026-09-09,device troubleshooting,2.96,1884,0.00113,,False,,PASS
+P0375,2026-09-09,pairing,2.06,1115,0.00067,,False,,PASS
+P0376,2026-09-09,device troubleshooting,2.42,1371,0.00082,,False,,PASS
+P0377,2026-09-09,device troubleshooting,1.08,1099,0.00066,,False,,PASS
+P0378,2026-09-09,pairing,1.06,821,0.00049,,False,,PASS
+P0379,2026-09-09,returns and warranty,4.54,2286,0.00137,up,False,,
+P0380,2026-09-09,returns and warranty,2.97,2494,0.0015,,True,,
+P0381,2026-09-09,out of scope,1.43,834,0.0005,,False,,
+P0382,2026-09-09,returns and warranty,5.98,1964,0.00118,,True,,
+P0383,2026-09-09,device troubleshooting,1.46,1274,0.00076,,False,,PASS
+P0384,2026-09-09,pairing,1.81,1490,0.00089,,True,,PASS
+P0385,2026-09-09,returns and warranty,1.55,2505,0.0015,,False,,
+P0386,2026-09-09,returns and warranty,1.83,1477,0.00089,,False,,
+P0387,2026-09-10,returns and warranty,4.9,1869,0.00112,,False,,
+P0388,2026-09-10,returns and warranty,1.24,1112,0.00067,up,False,,
+P0389,2026-09-10,device troubleshooting,1.63,1296,0.00078,,False,,PASS
+P0390,2026-09-10,device troubleshooting,2.54,1665,0.001,up,False,False,PASS
+P0391,2026-09-10,subscription and billing,1.87,1499,0.0009,,False,,
+P0392,2026-09-10,returns and warranty,5.55,1599,0.00096,,False,,
+P0393,2026-09-10,returns and warranty,2.55,1718,0.00103,,False,,
+P0394,2026-09-10,out of scope,2.6,1416,0.00085,up,False,,
+P0395,2026-09-10,device troubleshooting,2.19,2011,0.00121,,False,,PASS
+P0396,2026-09-10,returns and warranty,2.96,2368,0.00142,down,False,,
+P0397,2026-09-10,returns and warranty,1.85,2416,0.00145,,False,,
+P0398,2026-09-10,device troubleshooting,1.62,1179,0.00071,,False,False,PASS
+P0399,2026-09-10,out of scope,1.52,1646,0.00099,,False,False,
+P0400,2026-09-10,pairing,2.11,1929,0.00116,,False,False,PASS
+P0401,2026-09-10,device troubleshooting,5.6,1463,0.00088,up,False,,FAIL
+P0402,2026-09-10,subscription and billing,3.28,1770,0.00106,,False,,
+P0403,2026-09-10,returns and warranty,10.41,2957,0.00177,,False,,
+P0404,2026-09-10,pairing,1.88,964,0.00058,,False,,FAIL
+P0405,2026-09-10,device troubleshooting,1.55,1416,0.00085,,False,,PASS
+P0406,2026-09-10,device troubleshooting,2.17,734,0.00044,,False,,FAIL
+P0407,2026-09-10,returns and warranty,3.0,2436,0.00146,,False,,
+P0408,2026-09-10,out of scope,1.84,1733,0.00104,up,False,,
+P0409,2026-09-10,device troubleshooting,1.24,1197,0.00072,,False,False,PASS
+P0410,2026-09-10,device troubleshooting,1.57,1118,0.00067,,False,,PASS
+P0411,2026-09-10,device troubleshooting,1.71,1676,0.00101,,False,,PASS
+P0412,2026-09-10,out of scope,1.88,1242,0.00075,down,False,False,
+P0413,2026-09-10,device troubleshooting,1.56,1135,0.00068,down,False,,FAIL
+P0414,2026-09-10,device troubleshooting,1.6,1164,0.0007,up,False,,PASS
+P0415,2026-09-10,returns and warranty,1.16,1878,0.00113,,False,,
+P0416,2026-09-10,returns and warranty,3.23,2292,0.00138,down,False,,
+P0417,2026-09-10,device troubleshooting,2.26,1873,0.00112,down,False,,FAIL
+P0418,2026-09-10,subscription and billing,0.99,1245,0.00075,,False,False,
+P0419,2026-09-10,device troubleshooting,2.6,1313,0.00079,,False,,PASS
+P0420,2026-09-10,device troubleshooting,0.92,2233,0.00134,,True,,PASS
+P0421,2026-09-10,device troubleshooting,2.65,1785,0.00107,up,False,,PASS
+P0422,2026-09-10,returns and warranty,2.67,2088,0.00125,up,True,,
+P0423,2026-09-10,returns and warranty,5.68,1460,0.00088,down,False,,
+P0424,2026-09-10,device troubleshooting,1.25,1111,0.00067,,False,,PASS
+P0425,2026-09-10,pairing,1.58,784,0.00047,,False,,PASS
+P0426,2026-09-10,pairing,1.17,1629,0.00098,,False,,PASS
+P0427,2026-09-10,device troubleshooting,2.89,1535,0.00092,,False,,PASS
+P0428,2026-09-10,device troubleshooting,0.72,1329,0.0008,down,False,,PASS
+P0429,2026-09-10,subscription and billing,2.12,1105,0.00066,up,True,,
+P0430,2026-09-11,device troubleshooting,4.45,1654,0.00099,,False,,FAIL
+P0431,2026-09-11,device troubleshooting,1.25,1669,0.001,,False,,PASS
+P0432,2026-09-11,subscription and billing,2.13,1547,0.00093,up,False,,
+P0433,2026-09-11,device troubleshooting,2.26,1589,0.00095,,False,,PASS
+P0434,2026-09-11,device troubleshooting,1.88,1566,0.00094,,False,,PASS
+P0435,2026-09-11,device troubleshooting,0.64,1719,0.00103,down,False,,PASS
+P0436,2026-09-11,returns and warranty,2.74,2187,0.00131,,True,,
+P0437,2026-09-11,device troubleshooting,1.34,1669,0.001,,False,,PASS
+P0438,2026-09-11,device troubleshooting,11.41,940,0.00056,,False,False,PASS
+P0439,2026-09-11,returns and warranty,1.61,2140,0.00128,,False,,
+P0440,2026-09-11,device troubleshooting,1.9,2530,0.00152,up,False,False,PASS
+P0441,2026-09-11,device troubleshooting,3.35,1671,0.001,,False,,PASS
+P0442,2026-09-11,returns and warranty,3.32,1929,0.00116,,False,,
+P0443,2026-09-11,returns and warranty,5.15,1654,0.00099,,False,,
+P0444,2026-09-11,subscription and billing,1.91,1112,0.00067,,False,,
+P0445,2026-09-11,pairing,4.41,1170,0.0007,,False,False,PASS
+P0446,2026-09-11,device troubleshooting,2.4,1642,0.00099,,False,,PASS
+P0447,2026-09-11,subscription and billing,0.91,1875,0.00112,,False,,
+P0448,2026-09-11,returns and warranty,3.65,2342,0.00141,,False,False,
+P0449,2026-09-11,subscription and billing,1.23,1939,0.00116,down,False,False,
+P0450,2026-09-11,device troubleshooting,0.6,1956,0.00117,up,False,,PASS
+P0451,2026-09-11,pairing,0.83,1425,0.00085,,False,,PASS
+P0452,2026-09-11,device troubleshooting,1.75,1608,0.00096,,False,,PASS
+P0453,2026-09-11,returns and warranty,3.45,1918,0.00115,up,False,False,
+P0454,2026-09-11,device troubleshooting,1.3,1622,0.00097,,False,False,PASS
+P0455,2026-09-11,returns and warranty,3.73,1132,0.00068,,False,,
+P0456,2026-09-11,subscription and billing,1.58,2178,0.00131,,False,,
+P0457,2026-09-11,subscription and billing,3.19,1334,0.0008,,True,,
+P0458,2026-09-11,device troubleshooting,15.06,1395,0.00084,up,False,False,FAIL
+P0459,2026-09-11,out of scope,0.77,2002,0.0012,,False,,
+P0460,2026-09-11,subscription and billing,2.46,1095,0.00066,,True,,
+P0461,2026-09-11,returns and warranty,2.81,2219,0.00133,up,True,True,
+P0462,2026-09-11,subscription and billing,1.47,537,0.00032,,False,,
+P0463,2026-09-11,out of scope,3.6,1576,0.00095,up,False,,
+P0464,2026-09-11,device troubleshooting,2.37,1014,0.00061,down,False,,PASS
+P0465,2026-09-11,device troubleshooting,0.61,1726,0.00104,,False,False,PASS
+P0466,2026-09-11,device troubleshooting,3.22,1207,0.00072,,False,False,PASS
+P0467,2026-09-11,device troubleshooting,1.17,1769,0.00106,down,False,,FAIL
+P0468,2026-09-11,subscription and billing,0.91,1718,0.00103,,False,,
+P0469,2026-09-11,pairing,1.54,1618,0.00097,down,False,,PASS
+P0470,2026-09-11,pairing,3.97,2070,0.00124,,False,,PASS
+P0471,2026-09-11,out of scope,3.12,1596,0.00096,,False,False,
+P0472,2026-09-11,out of scope,0.81,1235,0.00074,,False,,
+P0473,2026-09-12,returns and warranty,23.43,2285,0.00137,,False,,
+P0474,2026-09-12,returns and warranty,2.94,2725,0.00163,,False,,
+P0475,2026-09-12,subscription and billing,0.85,949,0.00057,,False,,
+P0476,2026-09-12,device troubleshooting,1.44,1170,0.0007,,False,,FAIL
+P0477,2026-09-12,device troubleshooting,1.36,2023,0.00121,,False,False,PASS
+P0478,2026-09-12,pairing,1.81,1326,0.0008,,False,,FAIL
+P0479,2026-09-12,returns and warranty,2.08,2617,0.00157,,False,,
+P0480,2026-09-12,subscription and billing,2.61,1635,0.00098,up,False,False,
+P0481,2026-09-12,subscription and billing,1.39,1274,0.00076,,False,,
+P0482,2026-09-12,pairing,1.43,1580,0.00095,up,False,False,PASS
+P0483,2026-09-12,subscription and billing,1.28,1598,0.00096,up,False,,
+P0484,2026-09-12,returns and warranty,2.37,2044,0.00123,,True,False,
+P0485,2026-09-12,returns and warranty,4.76,1580,0.00095,,False,False,
+P0486,2026-09-12,device troubleshooting,1.75,1426,0.00086,,False,False,PASS
+P0487,2026-09-12,device troubleshooting,1.02,1637,0.00098,up,False,False,FAIL
+P0488,2026-09-12,subscription and billing,2.12,1857,0.00111,,True,,
+P0489,2026-09-12,device troubleshooting,1.33,708,0.00042,up,False,,PASS
+P0490,2026-09-12,device troubleshooting,2.83,1420,0.00085,down,False,,FAIL
+P0491,2026-09-12,returns and warranty,3.81,1816,0.00109,,False,,
+P0492,2026-09-12,returns and warranty,16.19,2611,0.00157,,False,,
+P0493,2026-09-12,device troubleshooting,1.32,807,0.00048,,False,,FAIL
+P0494,2026-09-12,device troubleshooting,2.61,2032,0.00122,,False,,PASS
+P0495,2026-09-12,device troubleshooting,2.14,1918,0.00115,up,False,,FAIL
+P0496,2026-09-12,device troubleshooting,1.99,1380,0.00083,,False,,FAIL
+P0497,2026-09-12,out of scope,3.59,1480,0.00089,,True,False,
+P0498,2026-09-12,returns and warranty,2.67,1346,0.00081,,False,,
+P0499,2026-09-12,subscription and billing,2.97,1931,0.00116,,False,,
+P0500,2026-09-12,device troubleshooting,1.47,878,0.00053,up,False,False,PASS
+P0501,2026-09-12,device troubleshooting,2.27,1133,0.00068,,False,,PASS
+P0502,2026-09-12,subscription and billing,1.42,1720,0.00103,,True,,
+P0503,2026-09-12,subscription and billing,3.33,1251,0.00075,,False,,
+P0504,2026-09-12,out of scope,3.96,1171,0.0007,,False,,
+P0505,2026-09-12,out of scope,2.09,1660,0.001,,True,,
+P0506,2026-09-12,pairing,0.76,2041,0.00122,,False,,PASS
+P0507,2026-09-12,device troubleshooting,0.53,1105,0.00066,down,False,False,FAIL
+P0508,2026-09-12,subscription and billing,1.29,1107,0.00066,,False,,
+P0509,2026-09-12,returns and warranty,2.8,2487,0.00149,,False,,
+P0510,2026-09-12,device troubleshooting,1.67,1173,0.0007,up,False,,PASS
+P0511,2026-09-12,returns and warranty,2.48,2041,0.00122,,False,,
+P0512,2026-09-12,returns and warranty,4.28,2174,0.0013,,False,False,
+P0513,2026-09-12,returns and warranty,1.65,889,0.00053,up,False,,
+P0514,2026-09-12,pairing,3.59,709,0.00043,,False,False,PASS
+P0515,2026-09-12,returns and warranty,2.03,1484,0.00089,,False,False,
+P0516,2026-09-13,pairing,1.23,1190,0.00071,,False,,PASS
+P0517,2026-09-13,subscription and billing,2.09,963,0.00058,,True,,
+P0518,2026-09-13,device troubleshooting,0.99,1476,0.00089,,True,,FAIL
+P0519,2026-09-13,pairing,2.17,1684,0.00101,,False,False,PASS
+P0520,2026-09-13,pairing,2.29,1898,0.00114,up,False,False,PASS
+P0521,2026-09-13,returns and warranty,4.35,1739,0.00104,up,False,,
+P0522,2026-09-13,device troubleshooting,1.4,1367,0.00082,,False,,PASS
+P0523,2026-09-13,pairing,5.66,1734,0.00104,,False,,PASS
+P0524,2026-09-13,returns and warranty,1.15,2552,0.00153,,False,,
+P0525,2026-09-13,device troubleshooting,1.49,1669,0.001,,True,,PASS
+P0526,2026-09-13,returns and warranty,2.72,2194,0.00132,,False,,
+P0527,2026-09-13,subscription and billing,0.67,1144,0.00069,,False,False,
+P0528,2026-09-13,device troubleshooting,1.12,1628,0.00098,down,False,,FAIL
+P0529,2026-09-13,subscription and billing,0.85,1128,0.00068,,False,,
+P0530,2026-09-13,subscription and billing,3.99,1278,0.00077,,True,False,
+P0531,2026-09-13,device troubleshooting,2.47,1565,0.00094,,False,False,PASS
+P0532,2026-09-13,returns and warranty,2.0,1461,0.00088,down,True,,
+P0533,2026-09-13,subscription and billing,1.66,1386,0.00083,,False,,
+P0534,2026-09-13,device troubleshooting,3.81,1565,0.00094,,False,,FAIL
+P0535,2026-09-13,device troubleshooting,2.95,1204,0.00072,down,True,,PASS
+P0536,2026-09-13,subscription and billing,0.74,1526,0.00092,,False,,
+P0537,2026-09-13,out of scope,2.46,1708,0.00102,,True,False,
+P0538,2026-09-13,pairing,1.91,1426,0.00086,,False,,FAIL
+P0539,2026-09-13,subscription and billing,2.33,680,0.00041,,False,False,
+P0540,2026-09-13,pairing,3.35,756,0.00045,up,True,,PASS
+P0541,2026-09-13,subscription and billing,1.49,1240,0.00074,,True,True,
+P0542,2026-09-13,subscription and billing,8.16,1062,0.00064,,False,False,
+P0543,2026-09-13,pairing,1.34,2249,0.00135,up,False,False,FAIL
+P0544,2026-09-13,returns and warranty,2.76,2579,0.00155,,False,False,
+P0545,2026-09-13,returns and warranty,3.14,2202,0.00132,,False,,
+P0546,2026-09-13,returns and warranty,3.76,2946,0.00177,,False,,
+P0547,2026-09-13,subscription and billing,0.99,1625,0.00097,,False,,
+P0548,2026-09-13,returns and warranty,1.08,2111,0.00127,,False,,
+P0549,2026-09-13,subscription and billing,2.36,1224,0.00073,,False,,
+P0550,2026-09-13,device troubleshooting,1.72,1453,0.00087,,False,,FAIL
+P0551,2026-09-13,device troubleshooting,2.31,1547,0.00093,,False,,FAIL
+P0552,2026-09-13,device troubleshooting,2.63,1424,0.00085,,False,,PASS
+P0553,2026-09-13,returns and warranty,3.57,2019,0.00121,up,False,False,
+P0554,2026-09-13,pairing,1.77,1772,0.00106,,False,,PASS
+P0555,2026-09-13,device troubleshooting,3.18,1701,0.00102,,False,,FAIL
+P0556,2026-09-13,pairing,3.53,894,0.00054,up,False,,FAIL
+P0557,2026-09-13,returns and warranty,2.54,2482,0.00149,,True,,
+P0558,2026-09-13,device troubleshooting,1.71,2337,0.0014,down,False,,FAIL
+P0559,2026-09-14,device troubleshooting,0.6,1507,0.0009,,False,,PASS
+P0560,2026-09-14,returns and warranty,2.56,2301,0.00138,,False,,
+P0561,2026-09-14,device troubleshooting,1.76,1167,0.0007,,False,,PASS
+P0562,2026-09-14,returns and warranty,2.17,1667,0.001,,False,,
+P0563,2026-09-14,returns and warranty,3.46,2330,0.0014,,False,,
+P0564,2026-09-14,subscription and billing,1.08,1471,0.00088,,False,,
+P0565,2026-09-14,subscription and billing,3.21,1528,0.00092,,True,True,
+P0566,2026-09-14,subscription and billing,2.33,1227,0.00074,,False,,
+P0567,2026-09-14,returns and warranty,5.19,2239,0.00134,,False,False,
+P0568,2026-09-14,device troubleshooting,1.01,1626,0.00098,,False,,PASS
+P0569,2026-09-14,device troubleshooting,4.81,1275,0.00076,,False,False,FAIL
+P0570,2026-09-14,device troubleshooting,1.49,1093,0.00066,,False,,PASS
+P0571,2026-09-14,returns and warranty,2.17,2655,0.00159,,False,,
+P0572,2026-09-14,out of scope,2.54,1643,0.00099,,False,,
+P0573,2026-09-14,device troubleshooting,0.54,957,0.00057,down,False,,PASS
+P0574,2026-09-14,pairing,1.24,1396,0.00084,,False,False,PASS
+P0575,2026-09-14,pairing,3.27,1355,0.00081,,False,,PASS
+P0576,2026-09-14,pairing,1.57,1338,0.0008,,False,,FAIL
+P0577,2026-09-14,subscription and billing,2.01,1540,0.00092,,False,,
+P0578,2026-09-14,device troubleshooting,1.42,1040,0.00062,,False,False,PASS
+P0579,2026-09-14,device troubleshooting,1.26,1323,0.00079,,False,,PASS
+P0580,2026-09-14,pairing,1.6,708,0.00042,,False,,PASS
+P0581,2026-09-14,subscription and billing,18.48,1506,0.0009,,False,,
+P0582,2026-09-14,returns and warranty,4.87,2251,0.00135,,False,False,
+P0583,2026-09-14,device troubleshooting,1.32,853,0.00051,,False,False,PASS
+P0584,2026-09-14,subscription and billing,1.67,1097,0.00066,,False,,
+P0585,2026-09-14,device troubleshooting,2.22,1232,0.00074,,False,,PASS
+P0586,2026-09-14,out of scope,2.6,1460,0.00088,,False,,
+P0587,2026-09-14,device troubleshooting,1.7,1563,0.00094,,False,,PASS
+P0588,2026-09-14,device troubleshooting,1.93,1557,0.00093,,True,,FAIL
+P0589,2026-09-14,returns and warranty,0.67,1796,0.00108,down,False,,
+P0590,2026-09-14,device troubleshooting,2.23,2075,0.00125,,False,,PASS
+P0591,2026-09-14,device troubleshooting,2.65,1616,0.00097,down,False,,FAIL
+P0592,2026-09-14,out of scope,1.06,1029,0.00062,down,False,,
+P0593,2026-09-14,returns and warranty,2.43,2083,0.00125,,False,True,
+P0594,2026-09-14,returns and warranty,5.47,1348,0.00081,up,True,,
+P0595,2026-09-14,device troubleshooting,1.19,1570,0.00094,,False,False,PASS
+P0596,2026-09-14,device troubleshooting,1.41,1090,0.00065,,False,,FAIL
+P0597,2026-09-14,subscription and billing,2.01,1898,0.00114,,False,False,
+P0598,2026-09-14,device troubleshooting,2.09,1314,0.00079,,False,,PASS
+P0599,2026-09-14,subscription and billing,1.4,2215,0.00133,,True,,
+P0600,2026-09-14,device troubleshooting,5.31,1313,0.00079,,False,,PASS

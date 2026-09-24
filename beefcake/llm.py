@@ -81,8 +81,8 @@ def load_colab_secrets() -> None:
 LAST_CALL: dict = {}
 
 
-def complete(messages: list[dict], model: str | None = None, temperature: float = 0.0, **kwargs) -> str:
-    """Send chat messages to the model and return the text of its reply."""
+def _call(messages: list[dict], model: str | None, temperature: float, **kwargs):
+    """One LiteLLM call, recording latency and cost in LAST_CALL."""
     model = model or get_model("bot")
     import time
 
@@ -91,13 +91,37 @@ def complete(messages: list[dict], model: str | None = None, temperature: float 
     # Newer models (GPT-6, Claude Sonnet 5 and Opus 5.5) reject temperature=0. drop_params tells
     # LiteLLM to leave out any setting a model doesn't support instead of raising an error.
     kwargs.setdefault("drop_params", True)
+    kwargs.setdefault("num_retries", 3)  # ride out the occasional rate limit
     start = time.perf_counter()
     response = litellm.completion(model=model, messages=messages, temperature=temperature, **kwargs)
     LAST_CALL.clear()
     LAST_CALL["model"] = model
     LAST_CALL["latency_s"] = round(time.perf_counter() - start, 2)
+    usage = getattr(response, "usage", None)
+    LAST_CALL["tokens"] = getattr(usage, "total_tokens", None)
     try:
         LAST_CALL["cost_usd"] = litellm.completion_cost(completion_response=response)
     except Exception:
         LAST_CALL["cost_usd"] = None
+    return response
+
+
+def complete(messages: list[dict], model: str | None = None, temperature: float = 0.0, **kwargs) -> str:
+    """Send chat messages to the model and return the text of its reply."""
+    response = _call(messages, model, temperature, **kwargs)
     return response.choices[0].message.content or ""
+
+
+def chat(messages: list[dict], tools: list[dict] | None = None, model: str | None = None,
+         temperature: float = 0.0, **kwargs) -> dict:
+    """Like complete(), but the model may call tools. Returns the assistant message as a plain dict:
+    {"role": "assistant", "content": str, "tool_calls": [{"id", "name", "arguments"}]}.
+    """
+    if tools:
+        kwargs["tools"] = tools
+    response = _call(messages, model, temperature, **kwargs)
+    message = response.choices[0].message
+    calls = []
+    for call in getattr(message, "tool_calls", None) or []:
+        calls.append({"id": call.id, "name": call.function.name, "arguments": call.function.arguments or "{}"})
+    return {"role": "assistant", "content": message.content or "", "tool_calls": calls}
