@@ -3,9 +3,10 @@
 Set ONE of these environment variables (or put it in a .env file):
     OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY
 
-The bot picks a default model for whichever key it finds. To choose a model
-yourself, set BEEFCAKE_MODEL (the bot) and BEEFCAKE_JUDGE_MODEL (judges),
-using LiteLLM's "provider/model" names, for example "openai/gpt-4o-mini".
+The bot picks a default model for whichever key it finds, and judges default to a
+stronger model from the same provider. To choose models yourself, set BEEFCAKE_MODEL
+(the bot) and BEEFCAKE_JUDGE_MODEL (judges), using LiteLLM's "provider/model" names,
+for example "openai/gpt-4o-mini". If you set only BEEFCAKE_MODEL, judges use it too.
 """
 
 from __future__ import annotations
@@ -20,6 +21,13 @@ DEFAULT_MODELS = [
     ("ANTHROPIC_API_KEY", "anthropic/claude-haiku-4-5"),
     ("GEMINI_API_KEY", "gemini/gemini-3.5-flash-lite"),
 ]
+# Default judge per provider: a stronger model than the bot's, because a model grading its own answers
+# tends to go easy on them (M5).
+DEFAULT_JUDGE_MODELS = {
+    "OPENAI_API_KEY": "openai/gpt-6-sol",
+    "ANTHROPIC_API_KEY": "anthropic/claude-sonnet-5",
+    "GEMINI_API_KEY": "gemini/gemini-3.8-flash",
+}
 
 
 class NoAPIKeyError(RuntimeError):
@@ -55,10 +63,10 @@ def get_model(role: str = "bot") -> str:
         return os.environ["BEEFCAKE_MODEL"]
     for key, model in DEFAULT_MODELS:
         if os.environ.get(key):
-            return model
+            return DEFAULT_JUDGE_MODELS[key] if role == "judge" else model
     raise NoAPIKeyError(
         "No API key found. Set OPENAI_API_KEY, ANTHROPIC_API_KEY, or GEMINI_API_KEY "
-        "(see README). Every exercise also has pre-generated data, so you can keep going without one."
+        "(see README). Most of the workshop runs on pre-generated data, so you can keep going without one."
     )
 
 

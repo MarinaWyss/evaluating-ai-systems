@@ -209,7 +209,7 @@ one giant "bad answer" group is too broad, and fifteen groups of one is too narr
         code('''
 # failure mode name -> the trace IDs in that group
 failure_modes = {
-    # "Invents policy": ["T03", "T12"],
+    # "Short name for the problem": ["T01"],
 }
 
 counts = pd.DataFrame([{"Failure mode": name, "Traces": len(ids)} for name, ids in failure_modes.items()])
@@ -290,7 +290,8 @@ If you finish early, relabel the traces with your new version and see whether ag
 ## Demo: what the numbers look like
 
 No labels yet? Here are two example reviewers labeling the 25 traces from Module 2 for **Assumes device**.
-Reviewer B passes the two borderline battery and heart-rate traces that Reviewer A fails.
+They disagree on two borderline traces: Reviewer B passes the battery trace that Reviewer A fails, and fails the
+heart-rate trace that Reviewer A passes.
 """),
         code('''
 demo = load_traces("traces_v1_labeled.csv")[["Trace ID", "User Query", "AI Response", "Assumes device"]]
@@ -357,16 +358,23 @@ Four questions got fixed and none broke, and it still isn't significant at the u
 ### Step 1: label 15 traces with your rubric
 
 This cell writes a blank eval sheet. Open `data/my_eval_sheet.csv` in a spreadsheet, fill in PASS or FAIL,
-save it, and run the next cell. Change `MY_FAILURE_MODES` to the modes your group found.
+save it, and run the next cell. Change `MY_FAILURE_MODES` to the modes your group found. If the sheet already
+exists, the cell leaves it alone, so rerunning the notebook won't wipe your labels.
 """),
         code('''
+from pathlib import Path
+
 MY_FAILURE_MODES = FAILURE_MODES  # or your own list, for example ["Invents policy", "Assumes device"]
 
-sheet = load_traces("traces_v1.csv")[["Trace ID", "User Query", "AI Response"]].head(15).copy()
-for mode in MY_FAILURE_MODES:
-    sheet[mode] = ""
-sheet.to_csv("data/my_eval_sheet.csv", index=False)
-print("Wrote data/my_eval_sheet.csv")
+SHEET = Path("data/my_eval_sheet.csv")
+if SHEET.exists():
+    print(f"Keeping your labels in {SHEET}. Delete the file to start over.")
+else:
+    sheet = load_traces("traces_v1.csv")[["Trace ID", "User Query", "AI Response"]].head(15).copy()
+    for mode in MY_FAILURE_MODES:
+        sheet[mode] = ""
+    sheet.to_csv(SHEET, index=False)
+    print(f"Wrote {SHEET}")
 '''),
         code('''
 mine = pd.read_csv("data/my_eval_sheet.csv", keep_default_na=False)
@@ -445,9 +453,8 @@ else:
 '''),
         md("### Compare a second model on quality, cost, and latency"),
         code('''
-OTHER_MODEL = "anthropic/claude-haiku-4-5"  # any LiteLLM model name you have a key for
-
 if llm.has_api_key():
+    OTHER_MODEL = llm.get_model("judge")  # a stronger model from your provider, or any LiteLLM model you have a key for
     rows = []
     for q in load_traces("traces_v1.csv")["User Query"].head(5):
         for model in [llm.get_model(), OTHER_MODEL]:
@@ -724,13 +731,14 @@ print(ASSUMES_DEVICE_JUDGE)
         md("""
 ## 2. Exercise 8: Judge alignment (25 min)
 
-1. Turn your Exercise 4a rubric into a judge with the six-part template (8 min).
+1. Build an **Assumes device** judge with the six-part template (8 min). Start from your Exercise 4a rubric if
+   you wrote it for Assumes device, or from the worked example in `rubric/rubric_template.md`.
 2. Run it on the **dev** set. Report TPR and TNR (5 min).
 3. Read the reasoning on every disagreement. Improve the prompt once. Rerun (8 min).
 4. **One** run on the **test** set. Post your numbers (4 min).
 
-The labeled traces are split about 10% train (for your few-shot examples), 40% dev, and 50% test. If your group
-wrote a rubric for a different failure mode, use these "Assumes device" labels for the exercise.
+Every group builds the same judge, because these traces are labeled for Assumes device only. They're split
+about 10% train (for your few-shot examples), 40% dev, and 50% test.
 """),
         code('''
 traces = pd.read_csv("data/exercise8_labeled_traces.csv")
@@ -828,8 +836,8 @@ if labeled_run is not None:
 ## 4. Exercise 9: The swap test (demo)
 
 A pairwise judge sees two replies and picks the better one. Run every pair in both orders: a consistent judge
-picks the same reply both times. In each pair here, one reply adds friendly filler, so you can also see whether
-the judge prefers longer answers.
+picks the same reply both times. In each pair here, both replies give the same answer and one adds friendly
+filler, and the judge has to answer "1" or "2", with no option for a tie.
 """),
         code('''
 from beefcake.judge import swap_test
