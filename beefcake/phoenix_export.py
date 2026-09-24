@@ -23,6 +23,21 @@ NOMINAL_S = {"llm": 0.8, "router": 0.5, "tool": 0.05, "handoff": 0.01, "error": 
 KIND = {"llm": "LLM", "router": "LLM", "tool": "TOOL", "handoff": "TOOL", "error": "CHAIN"}
 
 
+def check_phoenix(endpoint: str = "http://localhost:6006/v1/traces") -> None:
+    """Raise ConnectionError if nothing answers at the endpoint's server. The exporter itself fails quietly."""
+    import urllib.error
+    import urllib.request
+    from urllib.parse import urlsplit
+
+    base = "{0.scheme}://{0.netloc}/".format(urlsplit(endpoint))
+    try:
+        urllib.request.urlopen(base, timeout=3)
+    except urllib.error.HTTPError:
+        pass  # it answered, so it's running
+    except OSError as e:
+        raise ConnectionError(f"Can't reach Phoenix at {base}. Is `phoenix serve` running?") from e
+
+
 def _tracer(endpoint: str, project: str):
     from phoenix.otel import register
 
@@ -32,6 +47,7 @@ def _tracer(endpoint: str, project: str):
 
 def export_traces(traces: list[AgentTrace], endpoint: str = "http://localhost:6006/v1/traces",
                   project: str = "beefcake-support-bot") -> None:
+    check_phoenix(endpoint)
     provider, tracer = _tracer(endpoint, project)
     from opentelemetry import trace as otel
 
