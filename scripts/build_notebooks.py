@@ -30,7 +30,20 @@ elif os.path.basename(os.getcwd()) == "notebooks":
     os.chdir("..")
 sys.path.insert(0, os.getcwd())
 
-import pandas as pd
+try:
+    import pandas as pd
+except ModuleNotFoundError:
+    print("This notebook is not running on the repo's .venv, which has the workshop packages.")
+    print("It is running on:", sys.executable)
+    print()
+    print("To fix it in Jupyter: quit Jupyter, then from the repo folder run")
+    print("    .venv/bin/jupyter notebook notebooks/")
+    print("To fix it in VS Code or Cursor: click the kernel picker in the top right and")
+    print("    choose the interpreter at .venv/bin/python inside this repo.")
+    print("If you are already on the .venv, the install didn't finish; from the repo folder run")
+    print("    .venv/bin/pip install -r requirements.txt")
+    raise SystemExit("Wrong Python for this notebook - follow the steps printed above, then rerun this cell.")
+
 from beefcake import llm
 llm.load_colab_secrets()
 if llm.has_api_key():

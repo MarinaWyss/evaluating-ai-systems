@@ -32,12 +32,18 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
-jupyter notebook notebooks/
+.venv/bin/jupyter notebook notebooks/
 ```
 
 After `cp .env.example .env`, open `.env` and paste in one API key. If you use [uv](https://docs.astral.sh/uv/),
 you can replace the venv and install steps with `uv venv && source .venv/bin/activate` and
 `uv pip install -r requirements.txt`.
+
+Launching Jupyter as `.venv/bin/jupyter` matters: it guarantees the notebooks run on the environment you just
+installed into, even if you have other Pythons (pyenv, conda, Homebrew) on your machine. If you open the
+notebooks in VS Code or Cursor instead, click the kernel picker in the top right and choose the interpreter at
+`.venv/bin/python` inside this repo. If a notebook ever reports `No module named 'pandas'`, the kernel is not
+the `.venv` — the setup cell will tell you how to fix it.
 
 ### No API key?
 
