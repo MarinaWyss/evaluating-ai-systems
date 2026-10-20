@@ -28,10 +28,16 @@ You need Python 3.10 or newer.
 ```bash
 git clone https://github.com/MarinaWyss/evaluating-ai-systems.git
 cd evaluating-ai-systems
-pip install -r requirements.txt        # or: uv pip install -r requirements.txt
-cp .env.example .env                   # then paste in one API key
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
 jupyter notebook notebooks/
 ```
+
+After `cp .env.example .env`, open `.env` and paste in one API key. If you use [uv](https://docs.astral.sh/uv/),
+you can replace the venv and install steps with `uv venv && source .venv/bin/activate` and
+`uv pip install -r requirements.txt`.
 
 ### No API key?
 
@@ -124,10 +130,17 @@ To explore agent traces span by span in [Arize Phoenix](https://github.com/Arize
 separate virtual environment (it can pull in a newer OpenAI SDK than LiteLLM supports), start it, and send traces to it:
 
 ```bash
-pip install arize-phoenix && phoenix serve        # in its own environment; then open http://localhost:6006
-pip install arize-phoenix-otel                    # in this repo's environment
-python scripts/phoenix_demo.py                    # or --live to run v3 on a few questions first
+pip install arize-phoenix && phoenix serve
 ```
+
+Then open http://localhost:6006. Back in this repo's environment:
+
+```bash
+pip install arize-phoenix-otel
+python scripts/phoenix_demo.py
+```
+
+Pass `--live` to `phoenix_demo.py` to run v3 on a few questions first.
 
 ## For facilitators
 

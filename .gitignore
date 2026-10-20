@@ -8,3 +8,4 @@ answer_keys/
 # Facilitator only: it hard-codes the Exercise 4a labels that answer_keys/ is built from
 scripts/build_curated_data.py
 scripts/build_agent_data.py
+.DS_Store
