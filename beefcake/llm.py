@@ -6,7 +6,7 @@ Set ONE of these environment variables (or put it in a .env file):
 The bot picks a default model for whichever key it finds, and judges default to a
 stronger model from the same provider. To choose models yourself, set BEEFCAKE_MODEL
 (the bot) and BEEFCAKE_JUDGE_MODEL (judges), using LiteLLM's "provider/model" names,
-for example "openai/gpt-4o-mini". If you set only BEEFCAKE_MODEL, judges use it too.
+for example "openai/gpt-6-luna". If you set only BEEFCAKE_MODEL, judges use it too.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from pathlib import Path
 # Default model per provider. Model names change often: if one of these has been
 # retired, set BEEFCAKE_MODEL instead of editing this file.
 DEFAULT_MODELS = [
-    ("OPENAI_API_KEY", "openai/gpt-4o-mini"),
+    ("OPENAI_API_KEY", "openai/gpt-6-luna"),  # gpt-4o-mini shuts down on January 14, 2027
     ("ANTHROPIC_API_KEY", "anthropic/claude-haiku-4-5"),
     ("GEMINI_API_KEY", "gemini/gemini-3.5-flash-lite"),
 ]

@@ -1,7 +1,7 @@
 """Record real judge runs once, so the Module 5 notebook has results to show without an API key.
 
     python scripts/record_example_runs.py                     # uses BEEFCAKE_JUDGE_MODEL or the default
-    python scripts/record_example_runs.py --model openai/gpt-4o
+    python scripts/record_example_runs.py --model openai/gpt-6-sol
 
 Writes data/example_runs/ (commit these files):
     judge_assumes_device.csv   our "Assumes device" judge on the Exercise 8 dev and test sets
@@ -30,6 +30,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default=None)
     args = parser.parse_args()
+    if not llm.has_api_key():
+        sys.exit("This script calls a live judge model, so it needs an API key. Set OPENAI_API_KEY, "
+                 "ANTHROPIC_API_KEY, or GEMINI_API_KEY (see README).")
     model = args.model or llm.get_model("judge")
     OUT.mkdir(exist_ok=True)
 
