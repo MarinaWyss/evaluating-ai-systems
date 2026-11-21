@@ -19,6 +19,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from beefcake import llm  # noqa: E402
 from beefcake.bot import answer  # noqa: E402
 from beefcake.traces import save_traces  # noqa: E402
 
@@ -30,6 +31,9 @@ def main() -> None:
     parser.add_argument("--model", default=None)
     parser.add_argument("--out", default=None)
     args = parser.parse_args()
+    if not llm.has_api_key():
+        sys.exit("This script calls a live model, so it needs an API key. Set OPENAI_API_KEY, ANTHROPIC_API_KEY, "
+                 "or GEMINI_API_KEY (see README). The pre-generated traces in data/ work without one.")
 
     questions = pd.read_csv(args.questions)
     traces = []

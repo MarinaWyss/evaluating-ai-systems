@@ -207,7 +207,7 @@ open_codes = {
 }
 '''),
         code('''
-ex2["Your open code"] = ex2["Trace ID"].map(open_codes).fillna("")
+ex2["Your open code"] = [open_codes.get(trace_id, "") for trace_id in ex2["Trace ID"]]
 ex2.to_csv("data/my_open_codes.csv", index=False)
 print(f"Saved {(ex2['Your open code'] != '').sum()} open codes to data/my_open_codes.csv")
 '''),
@@ -611,7 +611,8 @@ else:
         md("""
 Did MRR and hit rate move together when you changed something? If you tried a larger `TOP_K`, what happened to
 precision, and to how long the prompt gets? Sections you never labeled count as not relevant, so if a new
-setting surfaces one, label it.
+setting surfaces one, label it. MRR here only looks at the top `TOP_K` results, so a relevant section ranked
+below that scores zero, and MRR can go up when you raise `TOP_K`.
 """),
         md("""
 ## 3. Groundedness
@@ -845,7 +846,10 @@ else:
     labeled_run = None
     print("Needs a judge run on the test set: yours (RUN_TEST above) or a recorded one.")
 if labeled_run is not None:
-    print(corrected_pass_rate(labeled_run["Assumes device"], labeled_run["Judge"], judged))
+    result = corrected_pass_rate(labeled_run["Assumes device"], labeled_run["Judge"], judged)
+    print(result)
+    if result["corrected"] is None:
+        print("No corrected rate: TPR + TNR isn't above 1 on the test set, so this judge is no better than chance.")
 '''),
         md("""
 ## 4. Exercise 9: The swap test (demo)
@@ -978,7 +982,7 @@ The end state alone isn't enough for read-only requests. C02 changes nothing in 
 arguments and no made-up tools.
 """),
         md("""
-An efficiency of `None` means the agent made fewer calls than the task needs, because it skipped a step it
+A blank efficiency (it shows as `NaN`) means the agent made fewer calls than the task needs, because it skipped a step it
 needed. C03 still gets the right end state, which is why task success and the process checks belong side by
 side.
 """),
