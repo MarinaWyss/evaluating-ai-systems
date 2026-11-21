@@ -2,7 +2,7 @@
 
     python scripts/generate_traces.py                       # v1.0 prompt, default model
     python scripts/generate_traces.py --prompt v1.1         # the fixed prompt
-    python scripts/generate_traces.py --model anthropic/claude-haiku-4-5 --out data/my_traces.csv
+    python scripts/generate_traces.py --model anthropic/claude-haiku-5-5 --out data/my_traces.csv
 
 Needs an API key (see README). The output has the same columns as the
 pre-generated data/traces_v1.csv, so every notebook can load it.
