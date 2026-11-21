@@ -1,5 +1,6 @@
-litellm>=1.80.5  # older versions break Gemini 3 tool calls
-tenacity         # LiteLLM needs it for retries (llm.py sets num_retries) but doesn't install it
-pandas>=2.0
-jupyter
-pytest           # for the facilitator checks: python -m pytest -q
+# Pinned to the versions the notebooks and tests were last run with (Python 3.13, November 2026).
+litellm==1.110.2   # needs >=1.80.5: older versions break Gemini 3 tool calls
+tenacity==9.2.1    # LiteLLM needs it for retries (llm.py sets num_retries) but doesn't install it
+pandas==3.1.1
+jupyter==1.1.1
+pytest==9.2.0      # for the facilitator checks: python -m pytest -q

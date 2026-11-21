@@ -18,7 +18,7 @@ from pathlib import Path
 # retired, set BEEFCAKE_MODEL instead of editing this file.
 DEFAULT_MODELS = [
     ("OPENAI_API_KEY", "openai/gpt-6-luna"),  # gpt-4o-mini shuts down on January 14, 2027
-    ("ANTHROPIC_API_KEY", "anthropic/claude-haiku-4-5"),
+    ("ANTHROPIC_API_KEY", "anthropic/claude-haiku-5-5"),
     ("GEMINI_API_KEY", "gemini/gemini-3.5-flash-lite"),
 ]
 # Default judge per provider: a stronger model than the bot's, because a model grading its own answers
