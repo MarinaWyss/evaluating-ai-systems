@@ -32,7 +32,7 @@ COMPANY = (
     "chest strap), and the BeefCake Coach subscription app."
 )
 # The store's date is fixed, so return windows and warranties work out the same on any day you run this.
-TODAY_LINE = f"Today is {store.TODAY:%B} {store.TODAY.day}, {store.TODAY.year}."
+TODAY_LINE = f"Today is {store.TODAY:%B} {store.TODAY.day}, {store.TODAY.year}. "  # trailing space: more text follows
 
 V2_PROMPT = (
     f"You are a friendly customer support agent for BeefCake Fitness. {COMPANY} {TODAY_LINE}"

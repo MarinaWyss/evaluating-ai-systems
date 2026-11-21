@@ -60,7 +60,8 @@ A key also lets you generate your own traces and try the stretch goals.
 The bot uses [LiteLLM](https://docs.litellm.ai/), so any major provider works. It picks a default model for
 whichever key it finds, and judges default to a stronger model from the same provider. To choose models yourself,
 set `BEEFCAKE_MODEL` (and `BEEFCAKE_JUDGE_MODEL` for judges) in `.env` using LiteLLM's `provider/model` names, for
-example `openai/gpt-4o-mini`. If you set only `BEEFCAKE_MODEL`, judges use it too.
+example `openai/gpt-6-luna`. If you set only `BEEFCAKE_MODEL`, judges use it too. Providers retire models, so
+if a call fails with a "model not found" error, set `BEEFCAKE_MODEL` to a current one.
 
 ## The notebooks
 
