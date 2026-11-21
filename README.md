@@ -1,7 +1,36 @@
-# Evaluating AI Systems: course code
+<p align="center">
+  <img src="assets/banner.png" alt="Evaluating AI Systems: a small support bot pointing at a checklist next to a rowing machine and a kettlebell" width="100%">
+</p>
 
-This is the companion repo for the Evaluating AI Systems course. It holds the running example: the support bot
-for **BeefCake Fitness**, a made-up home-gym company. You'll find its failures, write a rubric for them, and turn that rubric into an eval suite.
+# Evaluating AI Systems
+
+The companion repo for my AI evals course. Everything from the video is here, with exercises so you can follow along and make it stick.
+
+**📺 Watch the course on YouTube:** coming soon
+
+## ✅ What you'll do
+
+<img src="assets/bot.png" alt="The support bot inspecting a confusing answer with a magnifying glass" align="right" width="230">
+
+You'll take one app, a customer support bot, from "it seems fine when I try it" to a set of evals you can trust.
+
+- 🔍 Read the bot's real answers and find how it fails
+- 📝 Write a rubric and turn it into an eval suite
+- 🧩 Check retrieval, groundedness, and tool calls one piece at a time
+- ⚖️ Build an LLM judge and check it against human labels
+- 🚦 Evaluate agents, then set up sampling and CI gates for production
+
+Most exercises don't need an API key, and every notebook runs in Google Colab.
+
+<br clear="right">
+
+## 🏋️ Meet BeefCake Fitness
+
+<p align="center">
+  <img src="assets/product_lineup.png" alt="The four BeefCake products as cartoon characters: the Row, the Bell, the Pulse, and the Coach app" width="100%">
+</p>
+
+The running example is the support bot for **BeefCake Fitness**, a made-up home-gym company. We wrote the manuals, FAQ, and policies ourselves, so it's easy to tell when the bot makes something up.
 
 BeefCake sells four products:
 
@@ -12,7 +41,7 @@ BeefCake sells four products:
 | BeefCake Pulse | Heart-rate chest strap |
 | BeefCake Coach | Subscription app with classes |
 
-## Getting started
+## 🚀 Getting started
 
 ### Option 1: Google Colab (easiest)
 
@@ -63,7 +92,7 @@ set `BEEFCAKE_MODEL` (and `BEEFCAKE_JUDGE_MODEL` for judges) in `.env` using Lit
 example `openai/gpt-6-luna`. If you set only `BEEFCAKE_MODEL`, judges use it too. Providers retire models, so
 if a call fails with a "model not found" error, set `BEEFCAKE_MODEL` to a current one.
 
-## The notebooks
+## 📓 The notebooks
 
 | Notebook | Module | What you do |
 |---|---|---|
@@ -78,7 +107,7 @@ if a call fails with a "model not found" error, set `BEEFCAKE_MODEL` to a curren
 Module 1, Module 7, and Exercises 1, 11, and 12 have no notebook. Exercises 1, 11, and 12 are about your own app,
 and Module 7 works from the v1.0 and v1.1 traces you already met in `03b_eval_suite.ipynb`.
 
-## The three versions of the bot
+## 🤖 The three versions of the bot
 
 | Version | Used in | What it is |
 |---|---|---|
@@ -89,7 +118,7 @@ and Module 7 works from the v1.0 and v1.1 traces you already met in `03b_eval_su
 The tools act on a small fake store (`store.py`) with five orders and four devices, reset before every run. Its
 "today" is fixed at October 5, 2026, so return windows and warranties behave the same every time.
 
-## What's in the repo
+## 🗂️ What's in the repo
 
 ```
 beefcake/        the bot and the eval helpers
@@ -114,7 +143,7 @@ tests/           checks that the materials still match the video
 answer_keys/     maintainers only (see below)
 ```
 
-## About the traces
+## 🧾 About the traces
 
 The questions and the retrieval are real: the History column in every trace is exactly what the v1 bot
 sends to the model. The answers in the pre-generated traces are written by hand, so everyone
@@ -150,7 +179,7 @@ python scripts/phoenix_demo.py
 
 Pass `--live` to `phoenix_demo.py` to run v3 on a few questions first.
 
-## For maintainers
+## 🛠️ For maintainers
 
 - **Answer keys** live in `answer_keys/`, which is gitignored so it never reaches the public repo.
 - **The notebooks** are generated: edit `scripts/build_notebooks.py`, then run `python scripts/build_notebooks.py`.
