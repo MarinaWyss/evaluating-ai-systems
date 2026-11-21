@@ -13,7 +13,7 @@ from datetime import date
 # The store's "today", fixed so return windows and warranties behave the same every run.
 TODAY = date(2026, 10, 5)
 
-RETURN_WINDOW_DAYS = 30
+RETURN_WINDOW_DAYS = 30  # the policy; start_return doesn't enforce it, the agent has to
 WARRANTY_YEARS = {"BeefCake Row": 2, "BeefCake Bell": 2, "BeefCake Pulse": 1}
 
 ORDERS = {
@@ -59,10 +59,6 @@ class Store:
 STORE = Store()
 
 
-def _days_since(iso: str) -> int:
-    return (TODAY - date.fromisoformat(iso)).days
-
-
 def lookup_order(order_id: str, store: Store = STORE) -> dict:
     order = store.orders.get(order_id)
     if order is None:
@@ -78,9 +74,9 @@ def start_return(order_id: str, item: str, reason: str, store: Store = STORE) ->
         return {"error": f"{item!r} isn't in order {order_id}. Items: {', '.join(order['items'])}."}
     if order["delivered_on"] is None:
         return {"error": f"Order {order_id} hasn't been delivered yet."}
-    days = _days_since(order["delivered_on"])
-    if days > RETURN_WINDOW_DAYS:
-        return {"error": f"Order {order_id} was delivered {days} days ago, outside the {RETURN_WINDOW_DAYS}-day return window."}
+    # Deliberately no 30-day check here: like many real back-office APIs, this one trusts the caller.
+    # The return policy says the agent has to look the order up and check the window before it calls
+    # start_return, which is what the trajectory checks in Module 4 test.
     record = {
         "return_id": f"R-{len(store.returns) + 1:03d}",
         "order_id": order_id,
