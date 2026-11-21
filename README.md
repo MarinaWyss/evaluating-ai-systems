@@ -1,7 +1,7 @@
-# Evaluating AI Systems: workshop code
+# Evaluating AI Systems: course code
 
-This repo holds the running example for the workshop: the support bot for **BeefCake Fitness**, a made-up
-home-gym company. You'll find its failures, write a rubric for them, and turn that rubric into an eval suite.
+This is the companion repo for the Evaluating AI Systems course. It holds the running example: the support bot
+for **BeefCake Fitness**, a made-up home-gym company. You'll find its failures, write a rubric for them, and turn that rubric into an eval suite.
 
 BeefCake sells four products:
 
@@ -47,7 +47,7 @@ the `.venv` — the setup cell will tell you how to fix it.
 
 ### No API key?
 
-Most of the workshop works without one. The traces you'll analyze are pre-generated, and cells that need a live
+Most of the course works without one. The traces you'll analyze are pre-generated, and cells that need a live
 model tell you so and skip themselves. Two exercises are different:
 
 - **Exercise 0:** without a key, you see what the bot retrieves instead of its answer.
@@ -64,24 +64,25 @@ example `openai/gpt-4o-mini`. If you set only `BEEFCAKE_MODEL`, judges use it to
 
 ## The notebooks
 
-| Notebook | Workshop section | What you do |
+| Notebook | Module | What you do |
 |---|---|---|
 | `00_setup_check.ipynb` | Opening, Exercise 0 | Chat with the bot and check your setup |
 | `02_error_analysis.ipynb` | Module 2, Exercises 2 and 3 | Read traces, write open codes, group them into failure modes |
-| `03a_rubric_agreement.ipynb` | Module 3, Exercise 4a | Write a rubric, label traces with a partner, measure agreement |
+| `03a_rubric_agreement.ipynb` | Module 3, Exercise 4a | Write a rubric, label traces (ideally with a second person), measure agreement |
 | `03b_eval_suite.ipynb` | Module 3, Exercise 4b | Build the eval spreadsheet, a reference-based eval, and code checks |
 | `04_component_evals.ipynb` | Module 4, Exercises 5, 6, and 7 | Blame game, retrieval metrics, groundedness, tool-call checks |
 | `05_llm_judge.ipynb` | Module 5, Exercises 8 and 9 | Build a judge, align it on dev, test it once, correct a pass rate, swap test |
 | `06_agents_production.ipynb` | Module 6, Exercise 10 | Multi-agent autopsy, handoff assertions, agent metrics, a production log, CI gates |
 
-Module 1 and Exercise 11 are on paper, so they have no notebook.
+Module 1, Module 7, and Exercises 1, 11, and 12 have no notebook. Exercises 1, 11, and 12 are about your own app,
+and Module 7 works from the v1.0 and v1.1 traces you already met in `03b_eval_suite.ipynb`.
 
 ## The three versions of the bot
 
 | Version | Used in | What it is |
 |---|---|---|
 | v1 (`bot.py`) | Opening to Module 3 | A RAG bot: retrieve chunks from the docs, then answer |
-| v2 (`agents.answer_v2`) | Module 4 | One agent with tools: `search_docs`, `lookup_order`, `start_return`, `check_warranty`, `create_ticket` (the handoff to a person). There's deliberately no refund tool |
+| v2 (`agents.answer_v2`) | Module 4 | One agent with tools: `search_docs`, `lookup_order`, `start_return`, `check_warranty`, `create_ticket` (the handoff to a person). There's deliberately no refund tool, and `start_return` doesn't check the 30-day return window, so the agent has to look the order up first |
 | v3 (`agents.answer_v3`) | Module 6 | A router hands each question to a Device Support agent or an Orders and Billing agent |
 
 The tools act on a small fake store (`store.py`) with five orders and four devices, reset before every run. Its
@@ -108,15 +109,15 @@ docs/            the product manuals, policies, and FAQ the bot answers from
 data/            test questions, traces, and exercise files
 rubric/          the rubric template, with a worked example
 scripts/         generate live traces; rebuild the data and notebooks
-tests/           checks that the materials still match the workshop script
-answer_keys/     facilitator only (see below)
+tests/           checks that the materials still match the video
+answer_keys/     maintainers only (see below)
 ```
 
 ## About the traces
 
 The questions and the retrieval are real: the History column in every trace is exactly what the v1 bot
-sends to the model. The answers in the pre-generated traces are written by hand, so everyone in the room
-sees the same planted failures. Those traces are marked `curated` in the Source column.
+sends to the model. The answers in the pre-generated traces are written by hand, so everyone
+sees the same planted failures as the video. Those traces are marked `curated` in the Source column.
 
 To see what your own model does with the same questions:
 
@@ -148,21 +149,19 @@ python scripts/phoenix_demo.py
 
 Pass `--live` to `phoenix_demo.py` to run v3 on a few questions first.
 
-## For facilitators
+## For maintainers
 
-- **Answer keys** live in `answer_keys/`, which is gitignored so it never reaches the public repo. Bring it
-  out during the debrief.
-- **Before the workshop,** set `REPO_URL` in `scripts/build_notebooks.py` to the public repo, then run
-  `python scripts/build_notebooks.py` so the Colab setup cell clones the right place.
+- **Answer keys** live in `answer_keys/`, which is gitignored so it never reaches the public repo.
+- **The notebooks** are generated: edit `scripts/build_notebooks.py`, then run `python scripts/build_notebooks.py`.
 - **If you change the docs or the curated answers,** run `python scripts/build_curated_data.py`, then
-  `python -m pytest -q`. The tests check that retrieval and the failure counts still match the slides.
+  `python -m pytest -q`. The tests check that retrieval and the failure counts still match the video.
   That script is gitignored like `answer_keys/`, because it contains the Exercise 4a labels.
   For Modules 4 to 6, the same goes for `scripts/build_agent_data.py`, which writes the Exercise 5, 6, 7, and
   10 answer keys.
-- **For the M6.7 screenshot,** run `python scripts/phoenix_demo.py` without `--live` and open trace M2. It's the
-  curated trace the notes describe; live runs take different paths.
+- **Phoenix:** run `python scripts/phoenix_demo.py` without `--live` and open trace M2, the trace shown in
+  Module 6. Live runs take different paths.
 - **Record the judge runs once,** with a key: `python scripts/record_example_runs.py`, then commit
   `data/example_runs/`. The Module 5 notebook shows that run to anyone without a key, and the swap-test result
-  on the M5.14 slide comes from it.
+  in Module 5 comes from it.
 - **Evals in CI:** `python scripts/run_ci_evals.py` exits with an error when a gate fails. On the stored traces
   it fails on purpose, to show that a 90% suite threshold can pass while individual checks fail.

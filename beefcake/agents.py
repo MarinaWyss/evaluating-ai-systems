@@ -37,8 +37,9 @@ TODAY_LINE = f"Today is {store.TODAY:%B} {store.TODAY.day}, {store.TODAY.year}."
 V2_PROMPT = (
     f"You are a friendly customer support agent for BeefCake Fitness. {COMPANY} {TODAY_LINE}"
     "Use search_docs to look up product help and policies before answering. Use the order, return, "
-    "and warranty tools when the customer asks about an order or a device they own. If you can't "
-    "resolve the problem, use create_ticket to hand it to a person."
+    "and warranty tools when the customer asks about an order or a device they own. Before you start a "
+    "return, use lookup_order to check the items and the delivery date: returns are allowed within 30 days "
+    "of delivery. If you can't resolve the problem, use create_ticket to hand it to a person."
 )
 
 DEVICE_SUPPORT_PROMPT = (
@@ -51,7 +52,9 @@ ORDERS_BILLING_PROMPT = (
     f"You are the Orders and Billing agent for BeefCake Fitness. {COMPANY} {TODAY_LINE}"
     "You help with orders, returns, warranties, and Coach subscription billing. Use search_docs to "
     "check policies, and the order, return, and warranty tools for anything about a specific order "
-    "or device. If you can't resolve the problem, use create_ticket to hand it to a person."
+    "or device. Before you start a return, use lookup_order to check the items and the delivery date: "
+    "returns are allowed within 30 days of delivery. If you can't resolve the problem, use create_ticket "
+    "to hand it to a person."
 )
 
 ROUTER_PROMPT = """You route BeefCake Fitness support questions to one of two agents.
