@@ -1,4 +1,4 @@
-"""Generate the workshop notebooks in notebooks/.
+"""Generate the course notebooks in notebooks/.
 
 The notebooks are built from this script so they stay consistent and easy to
 review in a diff. Edit here, then run:  python scripts/build_notebooks.py
@@ -22,10 +22,10 @@ SETUP = f'''# Setup: run this cell first. It works in Google Colab and on your o
 import os, sys
 REPO_URL = "{REPO_URL}"
 if "google.colab" in sys.modules:
-    if not os.path.exists("/content/EvalsWorkshop"):
-        !git clone -q {{REPO_URL}} /content/EvalsWorkshop
+    if not os.path.exists("/content/evaluating-ai-systems"):
+        !git clone -q {{REPO_URL}} /content/evaluating-ai-systems
         !pip install -q "litellm>=1.80.5" tenacity
-    os.chdir("/content/EvalsWorkshop")
+    os.chdir("/content/evaluating-ai-systems")
 elif os.path.basename(os.getcwd()) == "notebooks":
     os.chdir("..")
 sys.path.insert(0, os.getcwd())
@@ -33,7 +33,7 @@ sys.path.insert(0, os.getcwd())
 try:
     import pandas as pd
 except ModuleNotFoundError:
-    print("This notebook is not running on the repo's .venv, which has the workshop packages.")
+    print("This notebook is not running on the repo's .venv, which has the course packages.")
     print("It is running on:", sys.executable)
     print()
     print("To fix it in Jupyter: quit Jupyter, then from the repo folder run")
@@ -90,8 +90,7 @@ the **Pulse** (a heart-rate chest strap), and **Coach** (a subscription app).
 The bot answers customer questions using RAG: it searches our docs for the most relevant chunks,
 pastes them into the prompt, and asks the model to answer.
 
-**Your job for the next 5 minutes:** run the cells below, ask the bot three questions, and raise
-your hand if anything breaks. If an answer seems a little off, remember it.
+Run the cells below and ask the bot a few questions. If an answer seems a little off, remember it.
 
 **API key:** in Colab, click the key icon on the left, add a secret named `OPENAI_API_KEY`,
 `ANTHROPIC_API_KEY`, or `GEMINI_API_KEY`, and turn on notebook access. On your laptop, copy
@@ -122,7 +121,7 @@ ask("how do i pair the heart rate strap with the rower")
         md("Now try your own. Ask about any of the products, a return, the warranty, or the Coach subscription."),
         code('ask("")  # your first question'),
         code('ask("")  # your second question'),
-        md("That's it for setup. Keep this notebook open: you'll use the bot again later today."),
+        md("That's it for setup. You'll meet the bot again in the other notebooks."),
     ])
 
 
@@ -164,8 +163,8 @@ for message in build_messages(q, retrieve(q)):
 '''),
         md("""
 `scripts/generate_traces.py` runs every test question through the bot and writes one row per trace to a CSV.
-The traces you'll read today are pre-generated, so nobody waits on API calls and everyone sees the same
-failures. If you have a key and want your own, set `RUN_LIVE = True`.
+The traces you'll read here are pre-generated, so you don't wait on API calls and you see the same failures
+as the video. If you have a key and want your own, set `RUN_LIVE = True`.
 """),
         code('''
 RUN_LIVE = False  # optional: generate your own traces with a live model (a minute or two)
@@ -179,13 +178,13 @@ if RUN_LIVE and llm.has_api_key():
     print("Saved data/my_traces_v1.0.csv")
 '''),
         md("""
-## 2. Exercise 2: Open coding (20 min)
+## 2. Exercise 2: Open coding
 
-**On your own first (12 min).** Read each trace, including the history, and write either `PASS` or a short
+**On your own first.** Read each trace, including the history, and write either `PASS` or a short
 note about what's wrong. Put on your product owner hat: the bot should be helpful, stick to our docs and
 policies, and never make up a policy. Don't fix anything yet. Just write it down.
 
-**Then compare with your partner (8 min).** Notice where you disagree.
+**If someone is working through this with you, compare notes.** Notice where you disagree.
 
 You can work in a spreadsheet instead: open `data/exercise2_traces.csv` in Google Sheets or Excel and use
 the "Your open code" column. The docs are in the `docs/` folder if you want to check a policy.
@@ -213,9 +212,9 @@ ex2.to_csv("data/my_open_codes.csv", index=False)
 print(f"Saved {(ex2['Your open code'] != '').sum()} open codes to data/my_open_codes.csv")
 '''),
         md("""
-## 3. Exercise 3: Axial coding (12 min)
+## 3. Exercise 3: Axial coding
 
-In groups of four, put all your open codes together. Group the ones that describe the same problem,
+Put all your open codes together. Group the ones that describe the same problem,
 give each group a short name, and count the traces in each. Aim for categories you could actually fix:
 one giant "bad answer" group is too broad, and fifteen groups of one is too narrow.
 """),
@@ -228,7 +227,7 @@ failure_modes = {
 counts = pd.DataFrame([{"Failure mode": name, "Traces": len(ids)} for name, ids in failure_modes.items()])
 counts.sort_values("Traces", ascending=False) if len(counts) else print("Add some groups above")
 '''),
-        md("### Compare with ours (after the debrief)\n\nThis is how we labeled all 25 traces."),
+        md("### Compare with ours (after you've tried it)\n\nThis is how we labeled all 25 traces."),
         code('''
 from beefcake.evals import FAILURE_MODES
 
@@ -249,13 +248,13 @@ def nb03():
     blank = "{\n" + "".join(f'    "{i}": "",\n' for i in ids) + "}"
     save("03a_rubric_agreement.ipynb", [
         md("""
-# Exercise 4a: Rubric stress test (25 min)
+# Exercise 4a: Rubric stress test
 
-1. **Write (8 min):** pick one failure mode from Exercise 3 and write its rubric entry from the template.
-2. **Label (6 min):** two people label the same 12 traces **on their own**. No peeking, no discussing.
-3. **Compare (8 min):** compute raw agreement and Cohen's kappa, then go through every disagreement and
-   fix the rubric.
-4. **Share (3 min):** one rubric change and what caused it.
+1. **Write:** pick one failure mode from Exercise 3 and write its rubric entry from the template.
+2. **Label:** label the same 12 traces **on your own**. Ideally, a second person labels them too, without
+   discussing. No partner? The demo at the bottom shows what the numbers look like.
+3. **Compare:** compute raw agreement and Cohen's kappa, then go through every disagreement and fix the rubric.
+4. **Revise:** write down one rubric change and what caused it.
 """),
         code(SETUP),
         md("## 1. Write your rubric\n\nOpen `rubric/rubric_template.md`, copy it, and fill it in. The worked example at the bottom shows a finished entry."),
@@ -332,7 +331,7 @@ def nb04():
 
 1. The eval spreadsheet: one PASS/FAIL column per failure mode.
 2. Is an improvement real? Intervals and McNemar's test.
-3. **Exercise 4b (20 min):** label 15 traces, write a reference-based eval for the device classifier,
+3. **Exercise 4b:** label 15 traces, write a reference-based eval for the device classifier,
    and write two code checks.
 4. Stretch goals: fix a failure in the prompt, and compare a second model.
 """),
@@ -366,12 +365,12 @@ Four questions got fixed and none broke, and it still isn't significant at the u
 25 questions. That's why you want around 100.
 """),
         md("""
-## 3. Exercise 4b: Build the suite (20 min)
+## 3. Exercise 4b: Build the suite
 
 ### Step 1: label 15 traces with your rubric
 
 This cell writes a blank eval sheet. Open `data/my_eval_sheet.csv` in a spreadsheet, fill in PASS or FAIL,
-save it, and run the next cell. Change `MY_FAILURE_MODES` to the modes your group found. If the sheet already
+save it, and run the next cell. Change `MY_FAILURE_MODES` to the modes you found. If the sheet already
 exists, the cell leaves it alone, so rerunning the notebook won't wipe your labels.
 """),
         code('''
@@ -522,16 +521,16 @@ def nb_m4():
 3. Groundedness: does the answer stick to what was retrieved?
 4. **Exercise 7:** checks on logged tool calls.
 
-This afternoon the bot is **version 2**: an agent with tools. It can search the docs, look up orders, start
+From here on, the bot is **version 2**: an agent with tools. It can search the docs, look up orders, start
 returns, check warranties, and hand off to a person with `create_ticket`. There's deliberately no refund tool.
 """),
         code(SETUP),
         md("""
-## 1. Exercise 5: Blame game (8 min)
+## 1. Exercise 5: Blame game
 
 Three wrong answers, with full traces. For each one, decide which piece broke: **retrieval** (it fetched the
 wrong text), **prompt** (an instruction is missing), **generation** (it had the right text and still got it
-wrong), or **tool call** (a tool was called wrong). First table with all three right wins.
+wrong), or **tool call** (a tool was called wrong).
 """),
         code('''
 from beefcake.agents import load_agent_traces, show_agent_trace
@@ -552,7 +551,7 @@ for t in blame:
 | Precision@k | Share of the top k that are relevant |
 | MRR | Average of 1 / rank of the first relevant chunk |
 
-### Exercise 6: Retrieval eval (12 min)
+### Exercise 6: Retrieval eval
 
 1. For each golden question, look at the top 5 chunks and write down the **section IDs** that actually answer it.
    Ask yourself: could the bot answer from this chunk alone? Mentioning the right product isn't enough.
@@ -634,10 +633,11 @@ else:
     print("Needs an API key. By hand: the '3-year warranty' claim isn't supported, because the policy says 2 years.")
 '''),
         md("""
-## 4. Exercise 7: Tool-call eval (8 min)
+## 4. Exercise 7: Tool-call eval
 
-Here are logged tool calls from version 2, and what we expected for each. Finish the four checks, run them,
-and see which traces fail. Things you can use:
+Here are logged tool calls from version 2, and what we expected for each. Our return policy depends on the
+delivery date, and `start_return` doesn't check it, so for a return the bot should call `lookup_order` first.
+Finish the four checks, run them, and see which traces fail. Things you can use:
 
 - `first_action_tool(trace)` gives the first tool that isn't a doc search (or `"none"`)
 - `schema_errors(name, arguments)` lists problems with a call's arguments
@@ -684,8 +684,9 @@ def run_tool_checks(traces, checks_to_run):
 run_tool_checks(tool_traces, CHECKS)
 '''),
         md("""
-One of these traces takes a different path to the right end state. Did any of your checks fail it? Should it
-have failed? Also look for traces that pass every argument check and still leave the store in the wrong state.
+One of these traces leaves the store in exactly the right state without following the return policy. Did any
+of your checks catch it? Also look for traces that pass every argument check and still leave the store in the
+wrong state.
 """),
         md("""
 ### Stretch: run version 2 live
@@ -713,6 +714,7 @@ SOLUTION_CHECKS = {
     "no made-up tools": lambda t, e: checks.only_approved_tools(t),
     "end state": lambda t, e: checks.end_state_matches(t, json.loads(e["Expected returns"]), int(e["Expected tickets"])),
     "no false success": lambda t, e: checks.no_false_success(t),
+    "lookup before return": lambda t, e: checks.lookup_before_return(t),
 }
 run_tool_checks(tool_traces, SOLUTION_CHECKS)
 '''),
@@ -729,11 +731,11 @@ def nb_m5():
 # Module 5: LLM-as-judge that you can trust
 
 1. Our judge for "Assumes device", built from the rubric.
-2. **Exercise 8 (25 min):** build your own judge, align it on the dev set, run it once on the test set.
+2. **Exercise 8:** build your own judge, align it on the dev set, run it once on the test set.
 3. Correcting a pass rate for an imperfect judge.
 4. **Exercise 9 (demo):** the swap test for position bias.
 
-Judges need an API key. Without one, you'll see a recorded run if the facilitator has saved one.
+Judges need an API key. Without one, you'll see a recorded run of the repo's own judge.
 """),
         code(SETUP),
         md("## 1. A real judge\n\nOverview, one failure mode, PASS and FAIL criteria, reasoning before the verdict, examples, then the trace."),
@@ -742,15 +744,15 @@ from beefcake.judge import ASSUMES_DEVICE_JUDGE, build_judge_prompt, judge_all, 
 print(ASSUMES_DEVICE_JUDGE)
 '''),
         md("""
-## 2. Exercise 8: Judge alignment (25 min)
+## 2. Exercise 8: Judge alignment
 
-1. Build an **Assumes device** judge with the six-part template (8 min). Start from your Exercise 4a rubric if
+1. Build an **Assumes device** judge with the six-part template. Start from your Exercise 4a rubric if
    you wrote it for Assumes device, or from the worked example in `rubric/rubric_template.md`.
-2. Run it on the **dev** set. Report TPR and TNR (5 min).
-3. Read the reasoning on every disagreement. Improve the prompt once. Rerun (8 min).
-4. **One** run on the **test** set. Post your numbers (4 min).
+2. Run it on the **dev** set. Write down TPR and TNR.
+3. Read the reasoning on every disagreement. Improve the prompt once. Rerun.
+4. **One** run on the **test** set. Write down your numbers.
 
-Every group builds the same judge, because these traces are labeled for Assumes device only. They're split
+Everyone builds the same judge, because these traces are labeled for Assumes device only. They're split
 about 10% train (for your few-shot examples), 40% dev, and 50% test.
 """),
         code('''
@@ -805,8 +807,8 @@ if dev_run is not None:
         print(f"  USER:  {r['User Query']}\\n  BOT:   {r['AI Response']}\\n  JUDGE: {r['Judge reasoning']}\\n")
 '''),
         md("""
-Improve the prompt once and rerun the dev cell. When you're happy, run the test set **once**. Your leaderboard
-score is the lower of TPR and TNR, so a judge that says PASS to everything can't win.
+Improve the prompt once and rerun the dev cell. When you're happy, run the test set **once**. Score yourself on
+the lower of TPR and TNR, so a judge that says PASS to everything can't look good.
 """),
         code('''
 RUN_TEST = False  # set to True once, when you're done iterating on dev
@@ -814,7 +816,7 @@ RUN_TEST = False  # set to True once, when you're done iterating on dev
 if RUN_TEST and llm.has_api_key():
     test_run = judge_all(test, my_judge)
     rates = tpr_tnr(test_run["Assumes device"], test_run["Judge"])
-    print(rates, "  leaderboard score:", min(rates["TPR"], rates["TNR"]))
+    print(rates, "  score (the lower of the two):", min(rates["TPR"], rates["TNR"]))
 '''),
         md("""
 ## 3. Correcting for an imperfect judge
@@ -882,12 +884,12 @@ def nb_m6():
 # Module 6: Multi-agent systems in production
 
 1. Version 3 of the bot: a router and two specialist agents.
-2. **Exercise 10 (15 min):** multi-agent autopsy.
+2. **Exercise 10:** multi-agent autopsy.
 3. Agent metrics: task success and trajectory efficiency.
 4. A production log: latency, rates by topic, what to sample for review, escalations.
 5. Evals in CI: a suite threshold versus per-check gates.
 
-Exercise 11 (your production eval plan) is on paper.
+Exercise 11 (your production eval plan) is about your own app, so it has no notebook.
 """),
         code(SETUP),
         md("## 1. Version 3: a router, a handoff, and two agents"),
@@ -901,7 +903,7 @@ else:
     show_agent_trace(v3["M2"])
 '''),
         md("""
-## 2. Exercise 10: Multi-agent autopsy (15 min)
+## 2. Exercise 10: Multi-agent autopsy
 
 This trace has a wrong final answer.
 
@@ -953,7 +955,9 @@ from beefcake import checks
 
 tool_traces = load_agent_traces("exercise7_tool_calls.jsonl")
 expected = pd.read_csv("data/exercise7_expected.csv").set_index("Trace ID")
-SHORTEST = {"C09": 2}  # look up the order, then hand off. Everything else needs one call at most.
+# The shortest path that works. A return needs two calls: look up the order (to check the 30-day window),
+# then start the return. C09 looks up the order, then hands off. Everything else needs one call at most.
+SHORTEST = {"C03": 2, "C04": 2, "C07": 2, "C10": 2, "C11": 2, "C09": 2}
 
 rows = []
 for t in tool_traces:
@@ -973,9 +977,13 @@ The end state alone isn't enough for read-only requests. C02 changes nothing in 
 "right", but it told the customer their order doesn't exist. That's why task success here also requires valid
 arguments and no made-up tools.
 """),
+        md("""
+An efficiency of `None` means the agent made fewer calls than the task needs, because it skipped a step it
+needed. C03 still gets the right end state, which is why task success and the process checks belong side by
+side.
+"""),
         code('''
-# The least efficient runs
-agent_metrics.sort_values("Efficiency").head(3)
+agent_metrics[agent_metrics["Efficiency"].isna() | (agent_metrics["Efficiency"] < 1)]
 '''),
         md("""
 ## 4. Production
@@ -1029,7 +1037,7 @@ spec.loader.exec_module(ci)
 report = ci.run()
 print("Suite pass rate:", report["suite pass rate"], "->", report["suite gate"])
 display(pd.DataFrame(report["per-check gates"]).T)
-print("Ship it?", report["ship it"])
+print("Deploy?", report["deploy"])
 '''),
         md("""
 The suite clears its 90% threshold while three checks fail. A whole-suite threshold can hide a test that fails

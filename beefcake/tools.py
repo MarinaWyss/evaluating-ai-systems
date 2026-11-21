@@ -30,7 +30,8 @@ TOOL_SCHEMAS = {
         },
     },
     "start_return": {
-        "description": "Start a return for one item in an order. Only works within 30 days of delivery.",
+        "description": ("Start a return for one item in an order. Returns are allowed within 30 days of delivery, and "
+                        "this tool doesn't check that: look the order up with lookup_order first."),
         "parameters": {
             "type": "object",
             "properties": {

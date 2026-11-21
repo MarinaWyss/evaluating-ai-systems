@@ -69,7 +69,7 @@ def main() -> None:
     args = parser.parse_args()
     report = run(args.live, args.prompt)
     print(json.dumps(report, indent=2))
-    sys.exit(0 if report["ship it"] else 1)
+    sys.exit(0 if report["deploy"] else 1)
 
 
 if __name__ == "__main__":

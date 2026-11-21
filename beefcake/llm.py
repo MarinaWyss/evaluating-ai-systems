@@ -1,4 +1,4 @@
-"""One small wrapper around LiteLLM, so the workshop works with any provider.
+"""One small wrapper around LiteLLM, so the course works with any provider.
 
 Set ONE of these environment variables (or put it in a .env file):
     OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY
@@ -66,7 +66,7 @@ def get_model(role: str = "bot") -> str:
             return DEFAULT_JUDGE_MODELS[key] if role == "judge" else model
     raise NoAPIKeyError(
         "No API key found. Set OPENAI_API_KEY, ANTHROPIC_API_KEY, or GEMINI_API_KEY "
-        "(see README). Most of the workshop runs on pre-generated data, so you can keep going without one."
+        "(see README). Most of the course runs on pre-generated data, so you can keep going without one."
     )
 
 

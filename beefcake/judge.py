@@ -66,7 +66,7 @@ Examples:
 {shots}"""
 
 
-# Our judge for "Assumes device" (M5.5). It's built from the worked example in rubric/rubric_template.md.
+# Our judge for "Assumes device" (Module 5). It's built from the worked example in rubric/rubric_template.md.
 ASSUMES_DEVICE_JUDGE = build_judge_prompt(
     failure_mode="Assumes device",
     definition="The bot gives device-specific advice before the customer has made clear which BeefCake product they mean.",
@@ -120,7 +120,7 @@ def _parse_verdict(text: str) -> dict:
 
 
 def run_judge(judge_prompt: str, user_query: str, ai_response: str, model: str | None = None) -> dict:
-    """Judge one trace. The judge only sees the customer's message and the bot's reply (M5.6)."""
+    """Judge one trace. The judge only sees the customer's message and the bot's reply."""
     messages = [
         {"role": "system", "content": judge_prompt},
         {"role": "user", "content": f"USER: {user_query}\nBOT: {ai_response}"},

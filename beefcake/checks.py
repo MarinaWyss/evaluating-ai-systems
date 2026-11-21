@@ -75,13 +75,26 @@ def no_false_success(trace: AgentTrace) -> bool:
     return not (claims and not trace.end_state.get("returns"))
 
 
+def lookup_before_return(trace: AgentTrace) -> bool:
+    """A trajectory check: every start_return comes after a lookup_order for the same order, because the
+    return policy depends on the delivery date and start_return doesn't check it."""
+    looked_up = set()
+    for s in trace.tool_calls:
+        args = s["input"] if isinstance(s["input"], dict) else {}
+        if s["name"] == "lookup_order":
+            looked_up.add(args.get("order_id"))
+        elif s["name"] == "start_return" and args.get("order_id") not in looked_up:
+            return False
+    return True
+
+
 def routed_correctly(trace: AgentTrace, expected_agent: str) -> bool:
     """A handoff assertion (v3): did the router send it to the right agent?"""
     handoffs = [s["name"] for s in trace.spans if s["kind"] == "handoff"]
     return handoffs == [f"transfer_to_{expected_agent}"]
 
 
-# --- Agent metrics (M6.2) ----------------------------------------------------
+# --- Agent metrics (Module 6) ------------------------------------------------
 
 def trajectory_efficiency(trace: AgentTrace, shortest_path: int) -> float:
     """Shortest number of tool calls that would have worked, divided by the number the agent made.
@@ -92,13 +105,13 @@ def trajectory_efficiency(trace: AgentTrace, shortest_path: int) -> float:
     return round(shortest_path / taken, 2) if taken else 1.0
 
 
-# --- CI gates (M6.11) --------------------------------------------------------
+# --- CI gates (Module 6) -----------------------------------------------------
 
 def gate(results: pd.DataFrame, suite_threshold: float, per_check: dict[str, float]) -> dict:
     """results: one row per (case, check) with a boolean 'passed' column and a 'check' column.
 
     Returns the suite pass rate, each check's pass rate, and whether each gate passes. A suite-wide
-    threshold alone can let one check fail every single time (M6.11), so important checks get their own gate.
+    threshold alone can let one check fail every single time, so important checks get their own gate.
     """
     suite_rate = float(results["passed"].mean())
     by_check = results.groupby("check")["passed"].mean()
@@ -108,5 +121,5 @@ def gate(results: pd.DataFrame, suite_threshold: float, per_check: dict[str, flo
         "suite pass rate": round(suite_rate, 3),
         "suite gate": "PASS" if suite_rate >= suite_threshold else "FAIL",
         "per-check gates": check_gates,
-        "ship it": suite_rate >= suite_threshold and all(g["gate"] == "PASS" for g in check_gates.values()),
+        "deploy": suite_rate >= suite_threshold and all(g["gate"] == "PASS" for g in check_gates.values()),
     }
