@@ -2,7 +2,7 @@
 
 The docs are split into chunks at each '## ' heading, and chunks are ranked with
 BM25, a classic keyword-matching score. BM25 needs no API key and gives the same
-results every time, which keeps the workshop exercises reproducible. It also
+results every time, which keeps the exercises reproducible. It also
 makes the kind of mistakes real retrieval makes: it matches words, not meaning.
 """
 

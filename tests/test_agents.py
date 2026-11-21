@@ -19,12 +19,26 @@ from beefcake.traces import DATA_DIR
 
 # --- The store and tools ---------------------------------------------------
 
-def test_return_window_and_damaged_label():
+def test_start_return_trusts_the_caller_and_labels_damage():
     st = store.Store()
-    assert "error" in store.start_return("BC-4420", "BeefCake Row", "too big", st)      # 52 days ago
+    # start_return doesn't check the 30-day window: the agent has to look the order up first.
+    late = store.start_return("BC-4420", "BeefCake Row", "too big", st)      # delivered 52 days ago
+    assert "error" not in late
     ok = store.start_return("BC-4452", "BeefCake Bell", "cracked", st)
     assert ok["prepaid_label"] is True
-    assert st.snapshot() == {"returns": [{"order_id": "BC-4452", "item": "BeefCake Bell"}], "tickets": 0}
+    assert st.snapshot()["returns"] == [{"order_id": "BC-4420", "item": "BeefCake Row"},
+                                        {"order_id": "BC-4452", "item": "BeefCake Bell"}]
+    assert "error" in store.start_return("BC-4417", "BeefCake Row", "wrong item", st)  # the order holds a Bell
+
+
+def test_lookup_before_return():
+    def t(*calls):
+        return AgentTrace("x", "q", "v2", spans=[{"kind": "tool", "name": n, "input": a} for n, a in calls])
+    lookup, ret = ("lookup_order", {"order_id": "BC-4417"}), ("start_return", {"order_id": "BC-4417"})
+    assert checks.lookup_before_return(t(lookup, ret))
+    assert not checks.lookup_before_return(t(ret, lookup))
+    assert not checks.lookup_before_return(t(("lookup_order", {"order_id": "BC-4431"}), ret))  # a different order
+    assert checks.lookup_before_return(t(lookup))
 
 
 def test_warranty_lengths_follow_the_policy():
@@ -114,13 +128,20 @@ def test_exercise7_checks():
     def end_ok(tid):
         e = expected.loc[tid]
         return checks.end_state_matches(traces[tid], json.loads(e["Expected returns"]), int(e["Expected tickets"]))
+    def right_tool(tid):
+        return checks.first_action_tool(traces[tid]) == expected.loc[tid, "Expected first tool"]
     assert not checks.arguments_match_schema(traces["C02"])
-    assert end_ok("C04") and checks.first_action_tool(traces["C04"]) == "lookup_order"   # valid alternate path
+    # C03: the right end state without the lookup the policy requires (outcome passes, process fails)
+    assert end_ok("C03") and not right_tool("C03") and not checks.lookup_before_return(traces["C03"])
     assert not checks.only_approved_tools(traces["C05"])
-    assert not end_ok("C07") and not end_ok("C11")
-    assert end_ok("C10") and not checks.no_false_success(traces["C10"])                   # only the claim is wrong
-    for tid in ["C01", "C03", "C06", "C08", "C09", "C12"]:
-        assert end_ok(tid) and checks.no_false_success(traces[tid]) and checks.only_approved_tools(traces[tid])
+    assert not end_ok("C07") and checks.lookup_before_return(traces["C07"])
+    # C10: a prohibited return, created for real because start_return trusts the caller
+    assert not end_ok("C10") and checks.no_false_success(traces["C10"]) and not right_tool("C10")
+    # C11: looked up the Bell, then tried to return the Row; valid arguments, wrong end state, false claim
+    assert checks.arguments_match_schema(traces["C11"]) and not end_ok("C11") and not checks.no_false_success(traces["C11"])
+    for tid in ["C01", "C04", "C06", "C08", "C09", "C12"]:
+        assert end_ok(tid) and right_tool(tid) and checks.no_false_success(traces[tid])
+        assert checks.only_approved_tools(traces[tid]) and checks.lookup_before_return(traces[tid])
 
 
 def test_false_success_regex():
@@ -174,8 +195,8 @@ def test_ci_demo_shows_the_suite_threshold_gotcha():
     ci = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(ci)
     report = ci.run()
-    assert report["suite gate"] == "PASS" and report["ship it"] is False
-    assert ci.run(prompt_version="v1.0")["ship it"] is False  # the stored v1.0 file is traces_v1.csv
+    assert report["suite gate"] == "PASS" and report["deploy"] is False
+    assert ci.run(prompt_version="v1.0")["deploy"] is False  # the stored v1.0 file is traces_v1.csv
 
 
 def test_ci_live_mode_checks_fresh_tool_calls(monkeypatch):
@@ -189,7 +210,7 @@ def test_ci_live_mode_checks_fresh_tool_calls(monkeypatch):
     spec.loader.exec_module(ci)
     monkeypatch.setattr(bot, "answer", lambda q, prompt_version=None: SimpleNamespace(ai_response="Happy to help!"))
     monkeypatch.setattr(agents, "answer_v2", lambda q, trace_id=None: AgentTrace(trace_id, q, "v2", final_answer="Done."))
-    assert ci.run(live=True)["ship it"] is True
+    assert ci.run(live=True)["deploy"] is True
 
 
 def test_phoenix_check_reports_a_stopped_server():

@@ -1,8 +1,8 @@
-"""Send BeefCake v3 traces to Arize Phoenix, for exploring spans (and the M6.7 screenshot).
+"""Send BeefCake v3 traces to Arize Phoenix, for exploring spans.
 
     pip install arize-phoenix    # in a separate virtual environment is safest
     phoenix serve                # then open http://localhost:6006
-    python scripts/phoenix_demo.py            # the curated v3 traces (use these for the M6.7 screenshot: trace M2)
+    python scripts/phoenix_demo.py            # the curated v3 traces (trace M2 is the one shown in Module 6)
     python scripts/phoenix_demo.py --live     # run v3 live on a few questions (needs a key; results vary run to run)
 """
 

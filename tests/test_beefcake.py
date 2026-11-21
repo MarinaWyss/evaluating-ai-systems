@@ -1,4 +1,4 @@
-"""Checks that the workshop materials still behave the way the script says they do.
+"""Checks that the course materials still behave the way the video says they do.
 
 Run with:  python -m pytest -q
 None of these call a model, so they run without an API key.
@@ -15,10 +15,10 @@ from beefcake.retrieval import load_chunks, retrieve
 from beefcake.traces import DATA_DIR, load_traces
 
 
-# --- Retrieval behaves the way the slides describe -------------------------
+# --- Retrieval behaves the way the video describes ------------------------
 
 def test_disconnecting_pulls_the_pulse_chunk_first():
-    # M2.9: "it keeps disconnecting" names no device, and retrieval puts the Pulse section first
+    # Module 2: "it keeps disconnecting" names no device, and retrieval puts the Pulse section first
     top = retrieve("it keeps disconnecting")[0]
     assert top.id.startswith("pulse_manual#")
 
@@ -40,7 +40,7 @@ def test_history_contains_the_chunks():
     assert "Cancel subscription" in msgs[1]["content"]
 
 
-# --- The planted counts match the script (M2.12, M3.15, M3.16) ---------------
+# --- The planted counts match the video (Modules 2 and 3) -------------------
 
 def test_v1_counts_match_the_script():
     df = load_traces("traces_v1_labeled.csv")
@@ -73,11 +73,11 @@ def test_exercise_files_have_the_right_sizes():
 def test_answer_key_covers_exercise_4a():
     key = DATA_DIR.parent / "answer_keys" / "exercise4a_key.csv"
     if not key.exists():
-        pytest.skip("answer_keys/ is facilitator only, so it isn't in the public repo")
+        pytest.skip("answer_keys/ is for maintainers only, so it isn't in the public repo")
     assert len(pd.read_csv(key)) == 12
 
 
-# --- Statistics match the numbers on the slides ------------------------------
+# --- Statistics match the numbers in the video ------------------------------
 
 def test_wilson_intervals_match_m3_16():
     low, high = wilson_interval(8, 25)

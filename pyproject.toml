@@ -1,7 +1,7 @@
 [project]
-name = "beefcake-evals-workshop"
+name = "beefcake-evals"
 version = "0.1.0"
-description = "Code for the Evaluating AI Systems workshop: the BeefCake Fitness support bot and its evals."
+description = "Code for the Evaluating AI Systems course: the BeefCake Fitness support bot and its evals."
 requires-python = ">=3.10"
 dependencies = [
     "litellm>=1.80.5",  # older versions break Gemini 3 tool calls

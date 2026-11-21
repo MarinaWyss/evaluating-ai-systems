@@ -1,4 +1,4 @@
-"""Send AgentTraces to Arize Phoenix so you can click through them span by span (M6.7).
+"""Send AgentTraces to Arize Phoenix so you can click through them span by span.
 
 Optional: needs `pip install arize-phoenix-otel` and a running Phoenix server:
     pip install arize-phoenix && phoenix serve          # then open http://localhost:6006
